@@ -5,7 +5,7 @@
   "main": "dist/canoe.js",
   "scripts": {
     "build": "tsc",
-    "bundle": "esbuild src/canoe.ts --bundle --minify --sourcemap --platform=node --outfile=dist/bundle.min.js",
+    "bundle": "esbuild src/myPage.ts --bundle --minify --sourcemap --platform=node --outfile=dist/bundle.min.js",
     "watch": "tsc -w"
   },
   "author": "",
