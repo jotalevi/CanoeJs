@@ -118,6 +118,7 @@ export default class Render {
     //let oldHtml = document.getElementsByTagName('body')[0].firstChild as HTMLElement;
     let newHtml = this.rootWidget.render();
     //this.updateElement(oldHtml, newHtml);
+
     if (!document.getElementsByTagName('body')[0].children[0]) {
       document.getElementsByTagName('body')[0].appendChild(newHtml);
     } else {

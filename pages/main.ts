@@ -1,4 +1,4 @@
-import { Div, H, TextInput, Canoe, Card, Row, Col, Button } from "../src/canoe";
+import { Div, H, TextInput, Canoe, Card, Row, Col, Button, row } from "../src/canoe";
 import FlexAlignContent from "../src/core/enum/FlexAlignContent";
 import FlexAlignItems from "../src/core/enum/FlexAlignItems";
 import FlexJustify from "../src/core/enum/FlexJustify";

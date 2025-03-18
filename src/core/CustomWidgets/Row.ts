@@ -5,7 +5,7 @@ import FlexWrap from "../enum/Flexwrap";
 import randomId from "../utils/randomId";
 import Widget from "../Widget";
 
-export default class Row implements Widget {
+class Row implements Widget {
   static Wrap = FlexWrap;
   static AlignContent = FlexAlignContent;
   static Justify = FlexJustify;
@@ -85,3 +85,21 @@ export default class Row implements Widget {
     return thisElement;
   }
 }
+
+const row = (opts: Partial<{
+  id: string | undefined;
+  classes: string[] | undefined;
+  style: {} | undefined;
+  attributes: {} | undefined;
+  callbacks: { key: string; value: Function }[] | undefined;
+  children: Widget[] | undefined;
+  wrap: FlexWrap | undefined;
+  alignContent: FlexAlignContent | undefined;
+  justify: FlexJustify | undefined;
+  alignItems: FlexAlignItems | undefined;
+  gap: string | number | undefined;
+}>) => {
+  return new Row(opts);
+}
+
+export { Row, row };

@@ -5,7 +5,7 @@ import H from "./core/HtmlWidgets/H";
 import Div from "./core/HtmlWidgets/Div";
 import TextInput from "./core/HtmlWidgets/TextInput";
 
-import Row from "./core/CustomWidgets/Row";
+import { Row, row } from "./core/CustomWidgets/Row";
 import Col from "./core/CustomWidgets/Col";
 import Card from "./core/CustomWidgets/Card";
 import Button from "./core/CustomWidgets/Button";
@@ -63,4 +63,4 @@ class Canoe {
   }
 }
 
-export { Widget, Render, Canoe, H, Div, Row, Col, TextInput, hashString, Card, Button };
+export { Widget, Render, Canoe, H, Div, Row, row, Col, TextInput, hashString, Card, Button };

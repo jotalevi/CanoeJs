@@ -1,99 +1,103 @@
 /* General Styles */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
-    margin: 0;
-    padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  font-family: "Raleway", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
 }
 
 * {
-    transition: all 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 /* Card Styles */
 .card {
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    margin: 10px;
-    transition: transform 0.2s ease-in-out;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin: 10px;
+  transition: transform 0.2s ease-in-out;
 }
 
 .card:hover {
-    transform: scale(1.02);
+  transform: scale(1.02);
 }
 
 /* Div Styles */
 .div-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
 }
 
 .div-box {
-    padding: 15px;
-    background: #e0e0e0;
-    border-radius: 8px;
+  padding: 15px;
+  background: #e0e0e0;
+  border-radius: 8px;
 }
 
 /* Input Styles */
 .input-field {
-    width: 100%;
-    padding: 10px;
-    border: 2px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-    outline: none;
-    transition: border-color 0.3s;
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s;
 }
 
 .input-field:focus {
-    border-color: #007bff;
+  border-color: #007bff;
 }
 
 /* Button Styles */
 .button {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
 }
 
 .button:hover {
-    background-color: #0056b3;
-    transform: scale(1.05);
+  background-color: #0056b3;
+  transform: scale(1.05);
 }
 
 .button:active {
-    background-color: #004494;
-    transform: scale(0.98);
+  background-color: #004494;
+  transform: scale(0.98);
 }
 
 /* Text Styles */
 .text-primary {
-    color: #007bff;
-    font-weight: bold;
+  color: #007bff;
+  font-weight: bold;
 }
 
 .text-secondary {
-    color: #6c757d;
+  color: #6c757d;
 }
 
 .text-large {
-    font-size: 24px;
-    font-weight: bold;
+  font-size: 24px;
+  font-weight: bold;
 }
 
 .text-small {
-    font-size: 12px;
-    color: #555;
+  font-size: 12px;
+  color: #555;
 }
