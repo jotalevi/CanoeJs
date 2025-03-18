@@ -25,7 +25,27 @@ class Canoe {
   private static renderer: Render;
   private static render: (state: any) => Widget;
 
+  private static onLoadCallbacks: Function[] = [];
+  private static postBuildCallbacks: Function[] = [];
+  private static preBuildCallbacks: Function[] = [];
+
+  static onLoad(callback: Function): void {
+    this.onLoadCallbacks.push(callback);
+  }
+
+  static postBuild(callback: Function): void {
+    this.postBuildCallbacks.push(callback);
+  }
+
+  static preBuild(callback: Function): void {
+    this.preBuildCallbacks.push(callback);
+  }
+
   static buildApp(rootId: string, initialState: any, renderFn: (state: any) => Widget): Render {
+    this.onLoadCallbacks.forEach((callback) => {
+      callback();
+    });
+
     this.rootId = rootId;
     this.render = renderFn;
     this._setState(initialState, false);
@@ -45,6 +65,10 @@ class Canoe {
     if (!this.state) {
       this.state = {};
     }
+
+    this.preBuildCallbacks.forEach((callback) => {
+      callback();
+    });
 
     //update the state
     Object.assign(this.state, newState);
@@ -66,6 +90,10 @@ class Canoe {
     if (rebuild) {
       new Render(this.rootId, this.render(this.state)).render();
     }
+
+    this.postBuildCallbacks.forEach((callback) => {
+      callback();
+    });
   }
 }
 

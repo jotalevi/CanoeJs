@@ -34,14 +34,21 @@ export default class Logo implements Widget {
 
     render(): HTMLElement {
         let element = document.createElement("a");
-        
-        element.href = this.to;
+
         element.id = this.id;
         element.className = this.classes.join(" ");
         element.style.cssText = Object.entries(this.style).map(([key, value]) => `${key}: ${value};`).join(" ");
         
         Object.entries(this.attributes).forEach(([key, value]) => {
             element.setAttribute(key, value as string);
+        });
+
+
+        this.callbacks.push({
+            key: "click",
+            value: () => {
+                window.location.href = this.to;
+            }
         });
 
         this.callbacks.forEach(({ key, value }) => {
