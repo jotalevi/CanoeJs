@@ -55,9 +55,7 @@ class Canoe {
   }
 
   public static setState(newState: any): void {
-    let start = performance.now();
     this._setState(newState, true);
-    console.log("Execution time: " + (performance.now() - start) + "ms");
   }
 
   static _setState(newState: any, rebuild = true): Promise<void> {
