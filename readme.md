@@ -4,7 +4,7 @@ CanoeJs is a lightweight, flexible UI framework designed for building dynamic we
 
 ## 🚀 Features
 - **Widget-Based System**: Components extend a `Widget` interface, ensuring consistency.
-- **Flutter-Style Layout**: Includes `Row`, `Col`, and `Stack`.
+- **Flutter-Style Layout**: Includes `Row`, `Col` and more to come.
 - **Efficient State Management**: Automatically triggers re-renders on state updates.
 - **Minimal DOM Updates**: Uses a custom diffing algorithm to update only changed elements.
 - **Extendable & Modular**: Easily extend with custom widgets.
