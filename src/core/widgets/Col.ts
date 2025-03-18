@@ -1,7 +1,7 @@
 import FlexAlignContent from "../enum/FlexAlignContent";
 import FlexAlignItems from "../enum/FlexAlignItems";
 import FlexJustify from "../enum/FlexJustify";
-import FlexWrap from "../enum/Flexwrap";
+import FlexWrap from "../enum/FlexWrap";
 import randomId from "../utils/randomId";
 import Widget from "../Widget";
 

@@ -4,10 +4,17 @@ import Render from "./core/Render";
 import H from "./core/widgets/H";
 import Div from "./core/widgets/Div";
 import TextInput from "./core/widgets/TextInput";
-import { Row, row } from "./core/widgets/Row";
+import Row from "./core/widgets/Row";
 import Col from "./core/widgets/Col";
 import Card from "./core/widgets/Card";
 import Button from "./core/widgets/Button";
+import Router from "./core/widgets/Router";
+import Link from "./core/widgets/Link";
+import FlexAlignContent from "./core/enum/FlexAlignContent";
+import FlexAlignItems from "./core/enum/FlexAlignItems";
+import FlexJustify from "./core/enum/FlexJustify";
+import FlexWrap from "./core/enum/FlexWrap";
+import randomId from "./core/utils/randomId";
 
 import { hashString } from "./core/utils/hashStr";
 
@@ -62,4 +69,4 @@ class Canoe {
   }
 }
 
-export { Widget, Render, Canoe, H, Div, Row, row, Col, TextInput, hashString, Card, Button };
+export { Widget, Render, Canoe, H, Div, Row, Col, TextInput, hashString, Card, Button, Router, Link, FlexAlignContent, FlexAlignItems, FlexJustify, FlexWrap, randomId };
