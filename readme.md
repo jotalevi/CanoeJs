@@ -118,7 +118,7 @@ new Row({
 });
 ```
 
-### **🟦 TextInput**
+### **🟥 TextInput**
 A text input field that **updates state on user input**.
 
 ```typescript
@@ -138,6 +138,7 @@ new TextInput({
 ## 🏗️ Roadmap
 - ✅ Core rendering & diffing engine.
 - 📝 Widget system (`Row`, `Col` and more to come).
+- 📔 Documentation Pages.
 - 🔄 Component lifecycle methods (`onInit`, `onDestroy`).
 - 📦 Widget library (Buttons, Modals, etc.).
 - 🏎️ Performance optimizations.
