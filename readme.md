@@ -1,6 +1,6 @@
-# Canoe 🛶
+# CanoeJs 🛶
 
-Canoe is a lightweight, flexible UI framework designed for building dynamic web applications with a **Widget-based** approach. It follows a **Flutter-inspired layout system** and utilizes an **efficient DOM diffing algorithm** for optimized rendering.
+CanoeJs is a lightweight, flexible UI framework designed for building dynamic web applications with a **Widget-based** approach. It follows a **Flutter-inspired layout system** and utilizes an **efficient DOM diffing algorithm** for optimized rendering.
 
 ## 🚀 Features
 - **Widget-Based System**: Components extend a `Widget` interface, ensuring consistency.
@@ -33,16 +33,16 @@ src/
 
 ## 🛠️ Installation
 
-Install Canoe from npm (or bun... or yarn... or deno...).
+Install CanoeJS from npm (or bun... or yarn... or deno...).
 ```sh
-npm install canoe
+npm install -g canoejs
 ```
 
 
 Starting a new project
 ```sh
-npm install canoe
-canoe create <projectname>
+npm i -g canoejs
+canoe new <projectname>
 ```
 
 ---
