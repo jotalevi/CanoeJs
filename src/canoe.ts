@@ -1,14 +1,13 @@
 import Widget from "./core/Widget";
 import Render from "./core/Render";
 
-import H from "./core/HtmlWidgets/H";
-import Div from "./core/HtmlWidgets/Div";
-import TextInput from "./core/HtmlWidgets/TextInput";
-
-import { Row, row } from "./core/CustomWidgets/Row";
-import Col from "./core/CustomWidgets/Col";
-import Card from "./core/CustomWidgets/Card";
-import Button from "./core/CustomWidgets/Button";
+import H from "./core/widgets/H";
+import Div from "./core/widgets/Div";
+import TextInput from "./core/widgets/TextInput";
+import { Row, row } from "./core/widgets/Row";
+import Col from "./core/widgets/Col";
+import Card from "./core/widgets/Card";
+import Button from "./core/widgets/Button";
 
 import { hashString } from "./core/utils/hashStr";
 

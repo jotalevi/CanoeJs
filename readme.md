@@ -4,7 +4,7 @@ Canoe is a lightweight, flexible UI framework designed for building dynamic web 
 
 ## 🚀 Features
 - **Widget-Based System**: Components extend a `Widget` interface, ensuring consistency.
-- **Flutter-Style Layout**: Includes `Row`, `Col`, and `Stack` with `MainAxisAlignment` and `CrossAxisAlignment` options.
+- **Flutter-Style Layout**: Includes `Row`, `Col`, and `Stack`.
 - **Efficient State Management**: Automatically triggers re-renders on state updates.
 - **Minimal DOM Updates**: Uses a custom diffing algorithm to update only changed elements.
 - **Extendable & Modular**: Easily extend with custom widgets.
@@ -14,33 +14,35 @@ Canoe is a lightweight, flexible UI framework designed for building dynamic web 
 ## 📂 Project Structure
 
 ```
-canoe/
-│── core/
-│   ├── Widget.ts        # Base Widget interface
-│   ├── Render.ts        # Handles rendering & state updates
-│   ├── State.ts         # Manages state with deep proxy tracking
-│── widgets/
-│   ├── Div.ts           # Basic Div widget
-│   ├── Row.ts           # Flex row widget
-│   ├── Col.ts           # Flex column widget
-│   ├── Stack.ts         # Overlapping elements widget
-│── utils/
-│   ├── diff.ts          # DOM diffing algorithm
-│   ├── hash.ts          # Utility for hashing objects
-│── index.ts             # Entry point for Canoe
-│── README.md            # Project Documentation
+src/
+├── canoe.ts
+├── core/
+│   ├── Render.ts           # The renderer class and functions
+│   ├── Widget.ts           # The Widget interface
+│   ├── enum/
+│   │   ├── ...*            # Enums... 
+│   ├── widgets/
+│   │   ├── ...*            # Basic Included Widgets (Row, Col, Div, Button, TextInput, Card, H, etc)
+│   ├── utils/
+│   │   ├── ...*            # Utilities for dom manipulation, state management and such
+├── public/
+│   ├── index.html          # The public served HTML file
+│   ├── main.css            # The public included CSS Styles
 ```
-
 ---
 
 ## 🛠️ Installation
 
-Clone the repository and install dependencies:
-
+Install Canoe from npm (or bun... or yarn... or deno...).
 ```sh
-git clone https://github.com/yourusername/canoe.git
-cd canoe
-npm install
+npm install canoe
+```
+
+
+Starting a new project
+```sh
+npm install canoe
+canoe create <projectname>
 ```
 
 ---
