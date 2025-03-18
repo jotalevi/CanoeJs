@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "bundle": "esbuild src/index.ts --bundle --minify --sourcemap --platform=node --outfile=dist/bundle.min.js",
-    "serve": "esbuild src/index.ts --bundle --minify --sourcemap --platform=node --outfile=dist/bundle.min.js && npx http-server public/index.html -p 3000"
+    "serve": "esbuild src/index.ts --bundle --minify --sourcemap --platform=node --outfile=public/dist/bundle.min.js && npx http-server public -p 3000"
   },
   "dependencies": {
     "canoejs": "latest"

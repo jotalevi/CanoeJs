@@ -15,7 +15,7 @@ if (args[0] === "new" && args[1]) {
     }
     // Copy template directory
     copyFolderRecursiveSync(templateDir, projectPath);
-    fs.writeFileSync(path.join(projectPath, ".gitignore"), "node_modules\ndist\n.env\n");
+    fs.writeFileSync(path.join(projectPath, ".gitignore"), "node_modules\ndist\n.env\npackage-lock.json\n");
     console.log("\u2705 CanoeJs project '".concat(projectName, "' created successfully!"));
     console.log("\uD83D\uDC49 Run the following to start:");
     console.log("   cd ".concat(projectName, " && npm install && npm run start"));

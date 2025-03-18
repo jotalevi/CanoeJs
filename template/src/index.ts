@@ -39,7 +39,7 @@ Canoe.buildApp("root", {}, (state) => {
         alignItems: FlexAlignItems.CENTER,
         children: [
           new Link({
-            to: "github.com/jotalevi/canoe",
+            to: "https://github.com/jotalevi/CanoeJs",
             children: [
               new H({
                 size: 3,
@@ -62,7 +62,7 @@ Canoe.buildApp("root", {}, (state) => {
             },
           }),
           new Link({
-            to: "github.com/jotalevi/canoe",
+            to: "https://github.com/jotalevi/CanoeJs",
             children: [
               new H({
                 size: 3,
@@ -85,7 +85,7 @@ Canoe.buildApp("root", {}, (state) => {
             },
           }),
           new Link({
-            to: "github.com/jotalevi/canoe",
+            to: "https://github.com/jotalevi/CanoeJs",
             children: [
               new H({
                 size: 3,
