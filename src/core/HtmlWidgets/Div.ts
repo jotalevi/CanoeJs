@@ -1,19 +1,29 @@
-import Widget from "./Widget";
+import randomId from "../utils/randomId";
+import Widget from "../Widget";
 
-export default class Div extends Widget {
+export default class Div implements Widget {
+  id: string;
+  classes: string[];
+  style: {}
+  attributes: {}
+  callbacks: { key: string; value: Function }[] | undefined;
   children: Widget[] = [];
 
   constructor(
     opts: Partial<{
       id: string | undefined;
       classes: string[] | undefined;
-      style: { key: string; value: string }[] | undefined;
-      attributes: { key: string; value: string }[] | undefined;
+      style: {} | undefined;
+      attributes: {} | undefined;
       callbacks: { key: string; value: Function }[] | undefined;
       children: Widget[] | undefined;
     }>
   ) {
-    super(opts);
+    this.id = opts.id || randomId();
+    this.classes = opts.classes || [];
+    this.style = opts.style || {};
+    this.attributes = opts.attributes || {};
+    this.callbacks = opts.callbacks || [];
     this.children = opts.children || [];
 
     return this;
@@ -28,16 +38,13 @@ export default class Div extends Widget {
       thisElement.classList.add(className);
     });
 
-    this.style.forEach((style) => {
-      thisElement.style[style.key] = style.value;
-    });
+    Object.keys(this.style).forEach((key) => {
+      thisElement.style[key] = this.style[key];
+    })
 
-    this.attributes.forEach((attribute) => {
-      thisElement.setAttribute(
-        `canoe-attrib-${attribute.key}`,
-        attribute.value
-      );
-    });
+    Object.keys(this.attributes).forEach((key) => {
+      thisElement.setAttribute(`canoe-attrib-${key}`, this.attributes[key]);
+    })
 
     this.callbacks.forEach((callback) => {
       // @ts-ignore

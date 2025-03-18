@@ -10,26 +10,31 @@ export default class Render {
   }
 
   private getFocus = (): string | null => {
-    let el = document.activeElement;
-    if (!(el instanceof HTMLElement)) return null;
-    const path = [];
-    while (el && el.nodeType === Node.ELEMENT_NODE && el !== document.body) {
-      let selector = el.nodeName.toLowerCase();
-      if (el.className) {
-        const classes = el.className.trim().split(/\s+/).join(".");
-        selector += `.${classes}`;
+    let el: Element | null = document.activeElement;
+    if (!el) return null;
+
+    const stack: string[] = [];
+    while (el && el.parentNode) {
+      let sibCount = 0;
+      let sibIndex = 0;
+      if (el.parentNode instanceof HTMLElement) {
+        const siblings = el.parentNode.children;
+        for (let i = 0; i < siblings.length; i++) {
+          if (siblings[i].nodeName === el.nodeName) {
+            if (siblings[i] === el) sibIndex = sibCount;
+            sibCount++;
+          }
+        }
       }
-      const sibling = Array.from(el.parentNode!.children).filter(
-        (e) => e.nodeName === el.nodeName
-      );
-      if (sibling.length > 1) {
-        selector += `:nth-of-type(${Array.from(el.parentNode!.children).indexOf(el) + 1
-          })`;
-      }
-      path.unshift(selector);
-      el = el.parentElement!;
+
+      if (el instanceof HTMLElement && el.hasAttribute('id') && el.id !== '') stack.unshift(`${el.nodeName.toLowerCase()}#${el.id}`);
+      else if (sibCount > 1) stack.unshift(`${el.nodeName.toLowerCase()}:nth-of-type(${sibIndex + 1})`);
+      else stack.unshift(el.nodeName.toLowerCase());
+
+      el = el.parentNode as Element;
     }
-    return path.join(" > ");
+
+    return stack.length > 1 ? stack.slice(1).join(' > ') : null; // Removes the html element
   };
 
   // Restore focus to an element using the stored selector
@@ -41,19 +46,77 @@ export default class Render {
     }
   };
 
+  private updateElement = (oldEl: HTMLElement, newEl: HTMLElement) => {
+    if (!oldEl || !newEl) return;
+
+    // Step 1: If the elements are different types, replace the entire node
+    if (oldEl.tagName !== newEl.tagName) {
+      oldEl.replaceWith(newEl);
+      return;
+    }
+
+    // Step 2: Update attributes
+    this.updateAttributes(oldEl, newEl);
+
+    // Step 3: Compare children recursively
+    this.updateChildren(oldEl, newEl);
+  }
+
+  private updateAttributes = (oldEl: HTMLElement, newEl: HTMLElement) => {
+    // Get old & new attributes
+    const oldAttrs = new Set(oldEl.getAttributeNames());
+    const newAttrs = new Set(newEl.getAttributeNames());
+
+    // Remove attributes not in newEl
+    oldAttrs.forEach(attr => {
+      if (!newAttrs.has(attr)) oldEl.removeAttribute(attr);
+    });
+
+    // Add/update attributes from newEl
+    newAttrs.forEach(attr => {
+      const newValue = newEl.getAttribute(attr);
+      if (oldEl.getAttribute(attr) !== newValue) {
+        oldEl.setAttribute(attr, newValue || "");
+      }
+    });
+  }
+
+  private updateChildren = (oldEl: HTMLElement, newEl: HTMLElement) => {
+    const oldChildren = Array.from(oldEl.childNodes);
+    const newChildren = Array.from(newEl.childNodes);
+
+    const maxLen = Math.max(oldChildren.length, newChildren.length);
+
+    for (let i = 0; i < maxLen; i++) {
+      const oldChild = oldChildren[i];
+      const newChild = newChildren[i];
+
+      if (!newChild) {
+        // Remove excess children
+        oldChild?.remove();
+      } else if (!oldChild) {
+        // Append new children
+        oldEl.appendChild(newChild);
+      } else if (oldChild.nodeType === Node.TEXT_NODE && newChild.nodeType === Node.TEXT_NODE) {
+        // Update text content
+        if (oldChild.textContent !== newChild.textContent) {
+          oldChild.textContent = newChild.textContent;
+        }
+      } else {
+        // Recursively update child elements
+        this.updateElement(oldChild as HTMLElement, newChild as HTMLElement);
+      }
+    }
+  }
+
   render(): HTMLElement {
     //get the current focus
     let focus = this.getFocus();
 
-    //remove all children from root element
-    while (document.getElementById(this.rootId).firstChild) {
-      document
-        .getElementById(this.rootId)
-        .removeChild(document.getElementById(this.rootId).firstChild);
-    }
-
-    //render the root widget
-    document.getElementById(this.rootId).appendChild(this.rootWidget.render());
+    //render the root element
+    let oldHtml = document.getElementsByTagName('body')[0].firstChild as HTMLElement;
+    let newHtml = this.rootWidget.render();
+    this.updateElement(oldHtml, newHtml);
 
     //restore focus
     this.setFocus(focus);

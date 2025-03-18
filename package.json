@@ -1,17 +1,18 @@
 {
-  "name": "canoe-app",
+  "name": "canoe",
   "version": "1.0.0",
-  "description": "A frontend application using the Canoe framework",
-  "main": "dist/canoe.js",
+  "description": "A frontend framework for building GUI applications",
   "scripts": {
     "build": "tsc",
-    "bundle": "esbuild src/myPage.ts --bundle --minify --sourcemap --platform=node --outfile=dist/bundle.min.js",
-    "watch": "tsc -w"
+    "bundle": "esbuild pages/main.ts --bundle --minify --sourcemap --platform=node --outfile=dist/bundle.min.js",
+    "serve": "esbuild pages/main.ts --bundle --minify --sourcemap --platform=node --outfile=dist/bundle.min.js && npx http-server -p 3000"
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "canoe": "latest"
+    "canoe": "latest",
+    "crypto": "^1.0.1",
+    "crypto-js": "^4.2.0"
   },
   "devDependencies": {
     "esbuild": "^0.25.1",
