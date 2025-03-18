@@ -1,6 +1,6 @@
 {
   "name": "canoejs",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "A lightweight, widget-based UI framework",
   "main": "src/canoe.ts",
   "bin": {
@@ -24,6 +24,10 @@
     "framework",
     "widgets"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jotalevi/CanoeJs.git"
+  },
   "author": "E.J. Talevi",
   "license": "MIT"
 }
