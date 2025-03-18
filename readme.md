@@ -118,8 +118,8 @@ new Row({
 });
 ```
 
-### **🟨 TextInput**
-A flex container with **vertical alignment options**.
+### **🟦 TextInput**
+A text input field that **updates state on user input**.
 
 ```typescript
 new TextInput({
