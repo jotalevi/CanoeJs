@@ -47,10 +47,11 @@ export default class Col implements Widget {
 
     this.style["display"] = "flex";
     this.style["flex-direction"] = "column";
-    this.style["flex-wrap"] = this.wrap || FlexWrap.WRAP;
-    this.style["align-content"] = this.alignContent || FlexAlignContent.START;
-    this.style["justify-content"] = this.justify || FlexJustify.START;
-    this.style["align-items"] = this.alignItems || FlexAlignItems.START;
+    this.style["flex-wrap"] = opts.wrap || FlexWrap.WRAP;
+    this.style["align-content"] = opts.alignContent || FlexAlignContent.START;
+    this.style["justify-content"] = opts.justify || FlexJustify.START;
+    this.style["align-items"] = opts.alignItems || FlexAlignItems.START;
+
     this.style["gap"] = opts?.gap?.toString() || "10px";
 
     return this;

@@ -17,7 +17,8 @@ export default class Card implements Widget {
             attributes: {} | undefined;
             callbacks: { key: string; value: Function }[] | undefined;
             children: Widget[] | undefined;
-        }>
+        }>,
+        override: boolean = false
     ) {
         this.id = opts.id || randomId();
         this.classes = opts.classes || [];
@@ -26,7 +27,7 @@ export default class Card implements Widget {
         this.callbacks = opts.callbacks || [];
         this.children = opts.children || [];
 
-        this.classes.push("card");
+        if (!override) this.classes.push("card");
 
         return this;
     }
