@@ -25,9 +25,7 @@ src/
 │   │   ├── ...*            # Basic Included Widgets (Row, Col, Div, Button, TextInput, Card, H, etc)
 │   ├── utils/
 │   │   ├── ...*            # Utilities for dom manipulation, state management and such
-├── public/
-│   ├── index.html          # The public served HTML file
-│   ├── main.css            # The public included CSS Styles
+├── public/                 # The public served files
 ```
 ---
 
