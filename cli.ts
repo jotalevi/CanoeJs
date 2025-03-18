@@ -16,20 +16,49 @@ if (args[0] === "new" && args[1]) {
         process.exit(1);
     }
 
-    // Copy template directory
+    console.log(`🚀 Creating CanoeJs project '${projectName}'...`);
+
     copyFolderRecursiveSync(templateDir, projectPath);
-    fs.writeFileSync(path.join(projectPath, ".gitignore"), "node_modules\ndist\n.env\npackage-lock.json\n");
-    console.log(`✅ CanoeJs project '${projectName}' created successfully!`);
-    console.log(`👉 Run the following to start:`);
-    console.log(`   cd ${projectName} && npm install && npm run start`);
+
+    let jsonProjectName = projectName
+        .trim()
+        .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+        .replace(/[\s_]+/g, '-')
+        .replace(/[^a-zA-Z0-9-]/g, '')
+        .replace(/-+/g, '-')
+        .toLowerCase()
+        .replace(/^-|-$/g, '');
+
+    let packagejson = JSON.parse(fs.readFileSync(path.join(projectPath, "package.json"), "utf8"));
+    packagejson.name = jsonProjectName;
+    fs.writeFileSync(path.join(projectPath, "package.json"), JSON.stringify(packagejson, null, 2));
+
+    console.log("📂 Project files copied successfully!");
+
+    // Create .gitignore
+    const gitignoreContent = "node_modules\ndist\n.env\npackage-lock.json\n";
+    fs.writeFileSync(path.join(projectPath, ".gitignore"), gitignoreContent);
+    console.log("🙈 .gitignore file created!");
+
+    // Navigate to project directory and install dependencies
+    try {
+        console.log("📦 Installing dependencies...");
+        execSync(`cd ${projectPath} && npm install`, { stdio: "inherit" });
+        console.log("✅ Dependencies installed!");
+        console.log(`🎉 CanoeJs project '${projectName}' is ready to go!`);
+        console.log(`👉 Run the following to start:`);
+        console.log(`   cd ${projectName} && npm run watch`);
+    } catch (error) {
+        console.error("❌ Error installing dependencies:", error);
+    }
 } else {
-    console.log("Usage: canoeJs new [projectName]");
+    console.log("🔖 Usage: canoejs new [projectName]");
 }
 
 /**
  * Recursively copies a folder and its contents
  */
-function copyFolderRecursiveSync(source: string, target: string) {
+function copyFolderRecursiveSync(source, target) {
     if (!fs.existsSync(target)) {
         fs.mkdirSync(target, { recursive: true });
     }

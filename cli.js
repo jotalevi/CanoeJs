@@ -3,6 +3,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var fs = require("fs");
 var path = require("path");
+var child_process_1 = require("child_process");
 var args = process.argv.slice(2);
 if (args[0] === "new" && args[1]) {
     var projectName = args[1];
@@ -13,15 +14,39 @@ if (args[0] === "new" && args[1]) {
         console.error("❌ Error: Template folder not found!");
         process.exit(1);
     }
-    // Copy template directory
+    console.log("\uD83D\uDE80 Creating CanoeJs project '".concat(projectName, "'..."));
     copyFolderRecursiveSync(templateDir, projectPath);
-    fs.writeFileSync(path.join(projectPath, ".gitignore"), "node_modules\ndist\n.env\npackage-lock.json\n");
-    console.log("\u2705 CanoeJs project '".concat(projectName, "' created successfully!"));
-    console.log("\uD83D\uDC49 Run the following to start:");
-    console.log("   cd ".concat(projectName, " && npm install && npm run start"));
+    var jsonProjectName = projectName
+        .trim()
+        .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+        .replace(/[\s_]+/g, '-')
+        .replace(/[^a-zA-Z0-9-]/g, '')
+        .replace(/-+/g, '-')
+        .toLowerCase()
+        .replace(/^-|-$/g, '');
+    var packagejson = JSON.parse(fs.readFileSync(path.join(projectPath, "package.json"), "utf8"));
+    packagejson.name = jsonProjectName;
+    fs.writeFileSync(path.join(projectPath, "package.json"), JSON.stringify(packagejson, null, 2));
+    console.log("📂 Project files copied successfully!");
+    // Create .gitignore
+    var gitignoreContent = "node_modules\ndist\n.env\npackage-lock.json\n";
+    fs.writeFileSync(path.join(projectPath, ".gitignore"), gitignoreContent);
+    console.log("🙈 .gitignore file created!");
+    // Navigate to project directory and install dependencies
+    try {
+        console.log("📦 Installing dependencies...");
+        (0, child_process_1.execSync)("cd ".concat(projectPath, " && npm install"), { stdio: "inherit" });
+        console.log("✅ Dependencies installed!");
+        console.log("\uD83C\uDF89 CanoeJs project '".concat(projectName, "' is ready to go!"));
+        console.log("\uD83D\uDC49 Run the following to start:");
+        console.log("   cd ".concat(projectName, " && npm run watch"));
+    }
+    catch (error) {
+        console.error("❌ Error installing dependencies:", error);
+    }
 }
 else {
-    console.log("Usage: canoeJs new [projectName]");
+    console.log("🔖 Usage: canoejs new [projectName]");
 }
 /**
  * Recursively copies a folder and its contents

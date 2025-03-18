@@ -19,7 +19,7 @@ CanoeJs is a lightweight, flexible UI framework designed for building dynamic we
 npm install -g canoejs
 
 # Create a new project
-canoe new <projectname>
+canoejs new <projectname>
 
 # CD into the new project
 cd <projectname>

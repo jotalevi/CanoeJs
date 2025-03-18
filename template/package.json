@@ -1,9 +1,11 @@
 {
   "name": "canoeproject",
+  "description": "A new CanoeJs Project",
   "version": "1.0.0",
   "scripts": {
     "bundle": "esbuild src/index.ts --bundle --minify --sourcemap --platform=node --outfile=dist/bundle.min.js",
-    "serve": "esbuild src/index.ts --bundle --minify --sourcemap --platform=node --outfile=public/dist/bundle.min.js && npx http-server public -p 3000"
+    "serve": "esbuild src/index.ts --bundle --minify --sourcemap --platform=node --outfile=public/dist/bundle.min.js && npx http-server public -p 3000",
+    "watch": "esbuild src/index.ts --bundle --minify --sourcemap --platform=node --outfile=public/dist/bundle.min.js --watch & npx nodemon --watch public public -e js,html,css --exec \"npx http-server public -p 3000\""
   },
   "dependencies": {
     "canoejs": "latest"
