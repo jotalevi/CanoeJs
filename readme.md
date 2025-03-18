@@ -31,18 +31,23 @@ src/
 ```
 ---
 
-## 🛠️ Installation
+## 🛠️ Getting Started
 
-Install CanoeJS from npm (or bun... or yarn... or deno...).
 ```sh
+# Install CanoeJS from npm (or bun... or yarn... or deno...).
 npm install -g canoejs
-```
 
-
-Starting a new project
-```sh
-npm i -g canoejs
+# Create a new project
 canoe new <projectname>
+
+# CD into the new project
+cd <projectname>
+
+# Install Dependencies
+npm i
+
+# Run project
+npm run serve
 ```
 
 ---
@@ -53,15 +58,21 @@ canoe new <projectname>
 Your app starts with a `Widget`, which will be updated dynamically.
 
 ```typescript
-import Canoe from "./Canoe";
-import Row from "./widgets/Row";
-import TextInput from "./widgets/TextInput";
+import { Canoe, H } from "canoejs";
 
-const app = Canoe.buildApp("root", { name: "Eros" }, (state) =>
-    new Row({
-        children: [new TextInput({ attributes: [{ key: "placeholder", value: state.name }] })],
-    })
-);
+Canoe.buildApp("root", {}, (state) => {
+  return new H({
+    size: 1,
+    text: "CanoeJs App",
+    style: {
+      fontSize: "50px",
+      fontWeight: "900",
+      margin: "0px",
+      padding: "0px",
+      color: "#000000FF",
+    },
+  })
+}).render();
 ```
 
 ---
@@ -82,8 +93,14 @@ A flex container with **horizontal alignment options**.
 
 ```typescript
 new Row({
-    style: [{ key: "justifyContent", value: Row.MainAxisAlignment.CENTER }],
-    children: [new TextInput({})],
+    wrap: FlexWrap.NOWRAP,
+    alignContent: FlexAlignContent.CENTER,
+    justify: FlexJustify.CENTER,
+    alignItems: FlexAlignItems.CENTER,
+    gap: "5px",
+    children: [
+        ...
+    ],
 });
 ```
 
@@ -91,29 +108,38 @@ new Row({
 A flex container with **vertical alignment options**.
 
 ```typescript
-new Col({
-    style: [{ key: "alignItems", value: Col.CrossAxisAlignment.START }],
-    children: [new TextInput({})],
+new Row({
+    wrap: FlexWrap.NOWRAP,
+    alignContent: FlexAlignContent.CENTER,
+    justify: FlexJustify.CENTER,
+    alignItems: FlexAlignItems.CENTER,
+    gap: "5px",
+    children: [
+        ...
+    ],
 });
 ```
 
-### **🟥 Stack**
-Overlapping elements on top of each other.
+### **🟨 TextInput**
+A flex container with **vertical alignment options**.
 
 ```typescript
-new Stack({
-    children: [
-        new Div({ classes: ["background-box"] }),
-        new Div({ classes: ["foreground-box"] }),
-    ],
-});
+new TextInput({
+    value: state.text,
+    callbacks: [{
+        key: "keydown",
+        value: (e) => {
+            Canoe.setState({ text: e.target.value })
+        }
+    }]
+})
 ```
 
 ---
 
 ## 🏗️ Roadmap
 - ✅ Core rendering & diffing engine.
-- ✅ Widget system (`Row`, `Col`, `Stack`).
+- 📝 Widget system (`Row`, `Col` and more to come).
 - 🔄 Component lifecycle methods (`onInit`, `onDestroy`).
 - 📦 Widget library (Buttons, Modals, etc.).
 - 🏎️ Performance optimizations.
@@ -126,4 +152,4 @@ Feel free to fork, submit PRs, or report issues. All contributions are welcome! 
 ---
 
 ## 📄 License
-MIT License © 2025 Canoe Team
+MIT License © 2025 E.J. Talevi

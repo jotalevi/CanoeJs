@@ -4,7 +4,7 @@ import { H } from "canoejs";
 Canoe.buildApp("root", {}, (state) => {
   return new H({
     size: 1,
-    text: "Canoe",
+    text: "CanoeJs App",
     style: {
       fontSize: "50px",
       fontWeight: "900",
