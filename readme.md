@@ -11,23 +11,6 @@ CanoeJs is a lightweight, flexible UI framework designed for building dynamic we
 
 ---
 
-## 📂 Project Structure
-
-```
-src/
-├── canoe.ts
-├── core/
-│   ├── Render.ts           # The renderer class and functions
-│   ├── Widget.ts           # The Widget interface
-│   ├── enum/
-│   │   ├── ...*            # Enums... 
-│   ├── widgets/
-│   │   ├── ...*            # Basic Included Widgets (Row, Col, Div, Button, TextInput, Card, H, etc)
-│   ├── utils/
-│   │   ├── ...*            # Utilities for dom manipulation, state management and such
-├── public/                 # The public served files
-```
----
 
 ## 🛠️ Getting Started
 
