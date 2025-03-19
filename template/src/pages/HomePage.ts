@@ -19,7 +19,11 @@ export default class HomePage implements Widget {
             },
             gap: "0px",
             children: [
-                new Logo(),
+                new Logo({
+                    id: "logo",
+                    width: "500px",
+                    height: "500px",
+                }),
                 new H({
                     size: 1,
                     text: "CanoeJS",
@@ -32,7 +36,7 @@ export default class HomePage implements Widget {
                 }),
                 new H({
                     size: 2,
-                    text: "A JavaScript framework for building web applications (v1.0.35)",
+                    text: "A JavaScript framework for building web applications",
                     style: {
                         margin: "0px",
                         color: "#000",
@@ -46,13 +50,13 @@ export default class HomePage implements Widget {
                     alignItems: FlexAlignItems.CENTER,
                     children: [
                         new Link({
-                            to: "/docs",
+                            to: "https://github.com/jotalevi/CanoeJs",
                             children: [
                                 new H({
                                     size: 3,
                                     text: "GitHub",
                                     style: {
-                                        color: "rgb(148 190 200)",
+                                        color: "rgb(32 118 139)",
                                         fontSize: "20px",
                                         textAlign: "center",
                                     },
@@ -75,7 +79,7 @@ export default class HomePage implements Widget {
                                     size: 3,
                                     text: "Documentation",
                                     style: {
-                                        color: "rgb(148 190 200)",
+                                        color: "rgb(32 118 139)",
                                         fontSize: "20px",
                                         textAlign: "center",
                                     },
@@ -98,7 +102,7 @@ export default class HomePage implements Widget {
                                     size: 3,
                                     text: "Examples",
                                     style: {
-                                        color: "rgb(148 190 200)",
+                                        color: "rgb(32 118 139)",
                                         fontSize: "20px",
                                         textAlign: "center",
                                     },

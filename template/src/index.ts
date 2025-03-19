@@ -6,6 +6,8 @@ import DocsPage from "./pages/DocsPage";
 Canoe.preBuild(() => {
   // This is how you can measure the time it takes to render the page
   window['timeStart'] = performance.now();
+
+  document.body.style.background = "linear-gradient(to top, rgba(135, 135, 250, 0.05), rgba(25, 25, 180, 0.1))";
 });
 
 // Here you can start adding elements to the page, it runs after every render cycle and here you should refer to any member of document or window

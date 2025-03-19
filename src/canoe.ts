@@ -7,6 +7,7 @@ import TextInput from "./core/widgets/TextInput";
 import Row from "./core/widgets/Row";
 import Col from "./core/widgets/Col";
 import Card from "./core/widgets/Card";
+import Image from "./core/widgets/Image";
 import Button from "./core/widgets/Button";
 import Router from "./core/widgets/Router";
 import Link from "./core/widgets/Link";
@@ -29,6 +30,10 @@ class Canoe {
   private static onLoadCallbacks: Function[] = [];
   private static postBuildCallbacks: Function[] = [];
   private static preBuildCallbacks: Function[] = [];
+
+  static getState(): any {
+    return this.state;
+  }
 
   static onLoad(callback: Function): void {
     this.onLoadCallbacks.push(callback);
@@ -110,4 +115,4 @@ class Canoe {
   }
 }
 
-export { Widget, Render, Canoe, H, Div, Row, Col, TextInput, hashString, Card, Button, Router, Link, FlexAlignContent, FlexAlignItems, FlexJustify, FlexWrap, randomId };
+export { Widget, Render, Canoe, H, Div, Row, Col, TextInput, hashString, Card, Button, Image, Router, Link, FlexAlignContent, FlexAlignItems, FlexJustify, FlexWrap, randomId };
