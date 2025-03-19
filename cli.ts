@@ -36,7 +36,7 @@ if (args[0] === "new" && args[1]) {
     console.log("📂 Project files copied successfully!");
 
     // Create .gitignore
-    const gitignoreContent = "node_modules\ndist\n.env\npackage-lock.json\n";
+    const gitignoreContent = "node_modules/\npublic/dist/\npackage-lock.json\n.env";
     fs.writeFileSync(path.join(projectPath, ".gitignore"), gitignoreContent);
     console.log("🙈 .gitignore file created!");
 

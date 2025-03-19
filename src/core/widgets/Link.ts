@@ -1,3 +1,4 @@
+import { Canoe } from "../../canoe";
 import Widget from "../Widget";
 
 export default class Logo implements Widget {
@@ -47,7 +48,7 @@ export default class Logo implements Widget {
         this.callbacks.push({
             key: "click",
             value: () => {
-                window.location.href = this.to;
+                Canoe.navigate(this.to);
             }
         });
 
