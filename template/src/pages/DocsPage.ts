@@ -1,5 +1,15 @@
-import { Canoe, Col,  FlexAlignContent, FlexAlignItems, FlexJustify, FlexWrap, H, Link, Row, TextInput, Widget } from "canoejs";
-import Image from "../widgets/Image";
+import {
+    H,
+    Col,
+    Row,
+    Link,
+    Image,
+    Widget,
+    FlexWrap,
+    FlexJustify,
+    FlexAlignItems,
+    FlexAlignContent,
+} from "canoejs";
 
 export default class DocsPage implements Widget {
     id: string
