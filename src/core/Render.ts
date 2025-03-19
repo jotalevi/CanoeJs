@@ -114,9 +114,9 @@ export default class Render {
     let focus = this.getFocus();
 
     // TODO: Implement a diffing algorithm to update the DOM efficiently
-    let oldHtml = document.getElementsByTagName('body')[0].firstChild as HTMLElement;
+    //let oldHtml = document.getElementsByTagName('body')[0].firstChild as HTMLElement;
     let newHtml = this.rootWidget.render();
-    this.updateElement(oldHtml, newHtml);
+    //this.updateElement(oldHtml, newHtml);
 
     if (!document.getElementsByTagName('body')[0].children[0]) {
       document.getElementsByTagName('body')[0].appendChild(newHtml);
