@@ -1,7 +1,6 @@
 import { Canoe, Router } from "canoejs";
 import HomePage from "./pages/HomePage";
 import DocsPage from "./pages/DocsPage";
-import { url } from "inspector";
 
 // This runs before every render cycle, here you should only add elements to the head of the document, the document itself and window.
 Canoe.preBuild(() => {
