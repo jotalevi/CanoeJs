@@ -6,10 +6,17 @@ export default class Router implements Widget {
   routes: { route: string, widget: Widget }[] = [];
   currentRoute: string;
 
-  constructor() {
-    this.id = randomId();
-    this.routes = [];
-    this.currentRoute = window.location.pathname;
+  constructor(opts: Partial<{
+    id?: string,
+    routes: {
+      route: string,
+      widget: Widget
+    }[],
+    currentRoute: string
+  }> = {}) {
+    this.id = opts.id || randomId();
+    this.routes = opts.routes || [];
+    this.currentRoute = opts.currentRoute || window.location.pathname;
     return this;
   }
 

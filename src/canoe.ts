@@ -15,6 +15,7 @@ import FlexAlignItems from "./core/enum/FlexAlignItems";
 import FlexJustify from "./core/enum/FlexJustify";
 import FlexWrap from "./core/enum/FlexWrap";
 import randomId from "./core/utils/randomId";
+import addHistoryEventsListener from "./core/utils/historyEvents";
 
 import { hashString } from "./core/utils/hashStr";
 
@@ -46,12 +47,26 @@ class Canoe {
       callback();
     });
 
+    // Binc history events listeners
+    addHistoryEventsListener();
+
     this.rootId = rootId;
     this.render = renderFn;
     this._setState(initialState, false);
 
     this.renderer = new Render(rootId, renderFn(initialState));
     return this.renderer;
+  }
+
+  public static navigate(url: string): void {
+
+    // if url is another site or has http, open in new tab
+    if (url.includes("http") || url.includes("www")) {
+      window.open(url, "_blank");
+      return;
+    } else {
+      window.history.pushState({}, "", url);
+    }
   }
 
   public static setState(newState: any): void {
