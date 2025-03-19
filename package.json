@@ -1,13 +1,12 @@
 {
   "name": "canoejs",
-  "version": "1.0.35",
+  "version": "1.0.38",
   "description": "A lightweight, widget-based UI framework",
   "main": "src/canoe.ts",
   "bin": {
     "canoejs": "./cli.js"
   },
   "dependencies": {
-    "canoejs": "^1.0.36",
     "child_process": "^1.0.2",
     "crypto": "^1.0.1",
     "crypto-js": "^4.2.0",
