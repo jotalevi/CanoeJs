@@ -29,6 +29,8 @@ export default class H implements Widget {
     this.size = opts.size || 3;
     this.text = opts.text || "";
 
+    this.classes.push("text");
+
     return this;
   }
 

@@ -26,7 +26,7 @@ export default class Button implements Widget {
         this.callbacks = opts.callbacks || [];
         this.children = opts.children || [];
 
-        this.classes.push("button");
+        this.classes.push("btn");
 
         return this;
     }

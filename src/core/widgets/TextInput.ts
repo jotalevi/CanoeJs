@@ -29,6 +29,8 @@ export default class Div implements Widget {
     this.placeholder = opts.placeholder || "";
     this.value = opts.value || "";
 
+    this.classes.push("input");
+
     return this;
   }
 
