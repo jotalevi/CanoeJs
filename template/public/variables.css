@@ -1,0 +1,21 @@
+/* variables.css */
+:root {
+  --primary: #2b7cff;
+  --primary-hover: #1a6aff;
+  --secondary: #f3f4f6;
+  --text-color: #333;
+  --text-light: #777;
+  --bg-light: #fff;
+  --border-color: #e0e0e0;
+  --shadow: rgba(0, 0, 0, 0.1);
+  --danger: #e02424;
+  --success: #32a852;
+  --warning: #ffbc0d;
+  --tooltip-bg: #333;
+  --modal-overlay: rgba(0,0,0,0.6);
+
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+}

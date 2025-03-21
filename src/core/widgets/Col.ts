@@ -71,7 +71,7 @@ export default class Col implements Widget {
     })
 
     Object.keys(this.attributes).forEach((key) => {
-      thisElement.setAttribute(`canoe-attrib-${key}`, this.attributes[key]);
+      thisElement.setAttribute(`catrb-${key}`, this.attributes[key]);
     })
 
     this.callbacks.forEach((callback) => {
