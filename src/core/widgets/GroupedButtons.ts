@@ -1,30 +1,32 @@
 import randomId from "../utils/randomId";
 import Widget from "../Widget";
+import Button from "./Button";
 
-export default class Button implements Widget {
+export default class GroupedButtons implements Widget {
     id: string;
     classes: string[];
     style: {};
-    callbacks: {};
-    text: string;
+    buttons: Button[];
 
     constructor(
         opts: Partial<{
-            id: string,
-            classes: string[],
-            style: {},
-            callbacks: {},
-            text: string,
+            id: string;
+            classes: string[];
+            style: {};
+            buttons: Button[];
         }>
     ) {
         this.id = opts.id ?? randomId(5);
-        this.classes = opts.classes;
-        this.style = opts.style;
-        this.callbacks = opts.callbacks;
-        this.text = opts.text ?? 'Button';
+        this.classes = opts.classes ?? [];
+        this.style = opts.style ?? {};
 
-        this.classes.push('btn');
-        this.classes.push('btn-primary');
+
+        if (!opts.buttons)
+            throw new Error('GroupedButtons should recieve at least one button.');
+        
+        this.buttons = opts.buttons;
+
+        this.classes.push('btn-group');
 
         return this;
     }
@@ -33,7 +35,6 @@ export default class Button implements Widget {
         let thisElement = document.createElement("div");
 
         thisElement.id = this.id;
-        thisElement.innerText = this.text;
 
         this.classes.forEach((className) => {
             thisElement.classList.add(className);
@@ -43,9 +44,7 @@ export default class Button implements Widget {
             thisElement.style[key] = this.style[key];
         });
 
-        Object.keys(this.callbacks).forEach((key) => {
-            thisElement.addEventListener(key, this.callbacks[key]);
-        });
+        
 
         return thisElement;
     }

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Components</title>
+    <link rel="stylesheet" href="variables.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <script src="main.js"></script>
+
+    <button class="btn btn-dark toggle-theme" style="position: fixed; top: 25px; left: 25px; z-index: 1090;" onclick="toggleTheme()">Toggle Dark Mode</button>
+    <h1>Buttons</h1>
+    <div class="button-grid">
+        <!-- Loop over all colors -->
+        <div class="">
+            <h4>Primary</h4>
+            <button class="btn btn-primary">Primary</button>
+            <button class="btn btn-outline-primary">Outline</button>
+            <button class="btn btn-primary" disabled>Disabled</button>
+            <button class="btn btn-outline-primary" disabled>Outline Disabled</button>
+        </div>
+
+        <div class="">
+            <h4>Secondary</h4>
+            <button class="btn btn-secondary">Secondary</button>
+            <button class="btn btn-outline-secondary">Outline</button>
+            <button class="btn btn-secondary" disabled>Disabled</button>
+            <button class="btn btn-outline-secondary" disabled>Outline Disabled</button>
+        </div>
+
+        <div class="">
+            <h4>Success</h4>
+            <button class="btn btn-success">Success</button>
+            <button class="btn btn-outline-success">Outline</button>
+            <button class="btn btn-success" disabled>Disabled</button>
+            <button class="btn btn-outline-success" disabled>Outline Disabled</button>
+        </div>
+
+        <div class="">
+            <h4>Danger</h4>
+            <button class="btn btn-danger">Danger</button>
+            <button class="btn btn-outline-danger">Outline</button>
+            <button class="btn btn-danger" disabled>Disabled</button>
+            <button class="btn btn-outline-danger" disabled>Outline Disabled</button>
+        </div>
+
+        <div class="">
+            <h4>Warning</h4>
+            <button class="btn btn-warning">Warning</button>
+            <button class="btn btn-outline-warning">Outline</button>
+            <button class="btn btn-warning" disabled>Disabled</button>
+            <button class="btn btn-outline-warning" disabled>Outline Disabled</button>
+        </div>
+
+        <div class="">
+            <h4>Info</h4>
+            <button class="btn btn-info">Info</button>
+            <button class="btn btn-outline-info">Outline</button>
+            <button class="btn btn-info" disabled>Disabled</button>
+            <button class="btn btn-outline-info" disabled>Outline Disabled</button>
+        </div>
+
+        <div class="">
+            <h4>Light</h4>
+            <button class="btn btn-light">Light</button>
+            <button class="btn btn-outline-light">Outline</button>
+            <button class="btn btn-light" disabled>Disabled</button>
+            <button class="btn btn-outline-light" disabled>Outline Disabled</button>
+        </div>
+
+        <div class="">
+            <h4>Dark</h4>
+            <button class="btn btn-dark">Dark</button>
+            <button class="btn btn-outline-dark">Outline</button>
+            <button class="btn btn-dark" disabled>Disabled</button>
+            <button class="btn btn-outline-dark" disabled>Outline Disabled</button>
+        </div>
+    </div>
+    <h1>Grouped Buttons</h1>
+    <div class="btn-group">
+        <button class="btn btn-primary">Primary</button>
+        <button class="btn btn-success">Success</button>
+        <button class="btn btn-danger">Danger</button>
+    </div>
+    <div class="btn-group">
+        <button class="btn btn-outline-dark">Primary</button>
+        <button class="btn btn-dark">Success</button>
+        <button class="btn btn-outline-dark">Danger</button>
+    </div>
+
+    <h1>Badges</h1>
+    <div class="badge-grid">
+        <div class="badge-row">
+            <span class="badge badge-primary">Primary</span>
+            <span class="badge badge-secondary">Secondary</span>
+            <span class="badge badge-success">Success</span>
+            <span class="badge badge-danger">Danger</span>
+            <span class="badge badge-warning">Warning</span>
+            <span class="badge badge-info">Info</span>
+            <span class="badge badge-light">Light</span>
+            <span class="badge badge-dark">Dark</span>
+        </div>
+    </div>
+
+    <h1>Alerts</h1>
+    <div class="alert-grid">
+        <div class="alert alert-primary">This is a primary alert.</div>
+        <div class="alert alert-secondary">This is a secondary alert.</div>
+        <div class="alert alert-success">This is a success alert.</div>
+        <div class="alert alert-danger">This is a danger alert.</div>
+        <div class="alert alert-warning">This is a warning alert.</div>
+        <div class="alert alert-info">This is an info alert.</div>
+        <div class="alert alert-light">This is a light alert.</div>
+        <div class="alert alert-dark">This is a dark alert.</div>
+    </div>
+    <div class="alert-grid ">
+        <div class="alert alert-primary">
+            This is a primary alert.
+            <button class="close-btn" onclick="fadeAlert(this)">×</button>
+        </div>
+        <div class="alert alert-secondary">
+            This is a secondary alert.
+            <button class="close-btn" onclick="fadeAlert(this)">×</button>
+        </div>
+        <div class="alert alert-success">
+            This is a success alert.
+            <button class="close-btn" onclick="fadeAlert(this)">×</button>
+        </div>
+        <div class="alert alert-danger">
+            This is a danger alert.
+            <button class="close-btn" onclick="fadeAlert(this)">×</button>
+        </div>
+        <div class="alert alert-warning">
+            This is a warning alert.
+            <button class="close-btn" onclick="fadeAlert(this)">×</button>
+        </div>
+        <div class="alert alert-info">
+            This is an info alert.
+            <button class="close-btn" onclick="fadeAlert(this)">×</button>
+        </div>
+        <div class="alert alert-light">
+            This is a light alert.
+            <button class="close-btn" onclick="fadeAlert(this)">×</button>
+        </div>
+        <div class="alert alert-dark">
+            This is a dark alert.
+            <button class="close-btn" onclick="fadeAlert(this)">×</button>
+        </div>
+    </div>
+
+    <h1>Cards</h1>
+    <div class="card-grid">
+        <div class="card card-primary">
+            <div class="card-header">Primary Header</div>
+            <div class="card-body">Primary Body</div>
+            <div class="card-footer">Primary Footer</div>
+        </div>
+
+        <div class="card card-secondary">
+            <div class="card-header">Secondary Header</div>
+            <div class="card-body">Secondary Body</div>
+            <div class="card-footer">Secondary Footer</div>
+        </div>
+
+        <div class="card card-success">
+            <div class="card-header">Success Header</div>
+            <div class="card-body">Success Body</div>
+            <div class="card-footer">Success Footer</div>
+        </div>
+
+        <div class="card card-danger">
+            <div class="card-header">Danger Header</div>
+            <div class="card-body">Danger Body</div>
+            <div class="card-footer">Danger Footer</div>
+        </div>
+
+        <div class="card card-warning">
+            <div class="card-header">Warning Header</div>
+            <div class="card-body">Warning Body</div>
+            <div class="card-footer">Warning Footer</div>
+        </div>
+
+        <div class="card card-info">
+            <div class="card-header">Info Header</div>
+            <div class="card-body">Info Body</div>
+            <div class="card-footer">Info Footer</div>
+        </div>
+
+        <div class="card card-light">
+            <div class="card-header">Light Header</div>
+            <div class="card-body">Light Body</div>
+            <div class="card-footer">Light Footer</div>
+        </div>
+
+        <div class="card card-dark">
+            <div class="card-header">Dark Header</div>
+            <div class="card-body">Dark Body</div>
+            <div class="card-footer">Dark Footer</div>
+        </div>
+
+        <div class="card card-primary">
+            <div class="card-header">Primary Header</div>
+            <div class="card-body">Primary Body</div>
+        </div>
+
+        <!-- Repeat for all other variants... -->
+
+        <div class="card card-secondary">
+            <div class="card-header">Secondary Header</div>
+            <div class="card-body">Secondary Body</div>
+        </div>
+
+        <div class="card card-success">
+            <div class="card-header">Success Header</div>
+            <div class="card-body">Success Body</div>
+        </div>
+
+        <div class="card card-danger">
+            <div class="card-header">Danger Header</div>
+            <div class="card-body">Danger Body</div>
+        </div>
+
+        <div class="card card-warning">
+            <div class="card-header">Warning Header</div>
+            <div class="card-body">Warning Body</div>
+        </div>
+
+        <div class="card card-info">
+            <div class="card-header">Info Header</div>
+            <div class="card-body">Info Body</div>
+        </div>
+
+        <div class="card card-light">
+            <div class="card-header">Light Header</div>
+            <div class="card-body">Light Body</div>
+        </div>
+
+        <div class="card card-dark">
+            <div class="card-header">Dark Header</div>
+            <div class="card-body">Dark Body</div>
+        </div>
+
+        <div class="card card-primary">
+            <div class="card-header">Primary Header</div>
+            <div class="card-footer">Primary Footer</div>
+        </div>
+
+        <div class="card card-secondary">
+            <div class="card-header">Secondary Header</div>
+            <div class="card-footer">Secondary Footer</div>
+        </div>
+
+        <div class="card card-success ">
+            <div class="card-header">Success Header</div>
+            <div class="card-footer">Success Footer</div>
+        </div>
+
+        <div class="card card-danger">
+            <div class="card-header">Danger Header</div>
+            <div class="card-footer">Danger Footer</div>
+        </div>
+
+        <div class="card card-warning">
+            <div class="card-header">Warning Header</div>
+            <div class="card-footer">Warning Footer</div>
+        </div>
+
+        <div class="card card-info">
+            <div class="card-header">Info Header</div>
+            <div class="card-footer">Info Footer</div>
+        </div>
+
+        <div class="card card-light">
+            <div class="card-header">Light Header</div>
+            <div class="card-footer">Light Footer</div>
+        </div>
+
+        <div class="card card-dark">
+            <div class="card-header">Dark Header</div>
+            <div class="card-footer">Dark Footer</div>
+        </div>
+
+        <div class="card card-primary">
+            <div class="card-body">Primary Body</div>
+            <div class="card-footer">Primary Footer</div>
+        </div>
+
+        <div class="card card-secondary">
+            <div class="card-body">Secondary Body</div>
+            <div class="card-footer">Secondary Footer</div>
+        </div>
+
+        <div class="card card-success">
+            <div class="card-body">Success Body</div>
+            <div class="card-footer">Success Footer</div>
+        </div>
+
+        <div class="card card-danger">
+            <div class="card-body">Danger Body</div>
+            <div class="card-footer">Danger Footer</div>
+        </div>
+
+        <div class="card card-warning">
+            <div class="card-body">Warning Body</div>
+            <div class="card-footer">Warning Footer</div>
+        </div>
+
+        <div class="card card-info">
+            <div class="card-body">Info Body</div>
+            <div class="card-footer">Info Footer</div>
+        </div>
+
+        <div class="card card-light">
+            <div class="card-body">Light Body</div>
+            <div class="card-footer">Light Footer</div>
+        </div>
+
+        <div class="card card-dark">
+            <div class="card-body">Dark Body</div>
+            <div class="card-footer">Dark Footer</div>
+        </div>
+    </div>
+
+    <h1>Spinners</h1>
+    <div class="spinner-grid ">
+        <div class="spinner spinner-primary spinner-sm"></div>
+        <div class="spinner spinner-secondary spinner-sm"></div>
+        <div class="spinner spinner-success spinner-sm"></div>
+        <div class="spinner spinner-danger spinner-sm"></div>
+        <div class="spinner spinner-warning spinner-sm"></div>
+        <div class="spinner spinner-info spinner-sm"></div>
+        <div class="spinner spinner-light spinner-sm"></div>
+        <div class="spinner spinner-dark spinner-sm"></div>
+
+        <div class="spinner spinner-primary spinner-lg"></div>
+        <div class="spinner spinner-secondary spinner-lg"></div>
+        <div class="spinner spinner-success spinner-lg"></div>
+        <div class="spinner spinner-danger spinner-lg"></div>
+        <div class="spinner spinner-warning spinner-lg"></div>
+        <div class="spinner spinner-info spinner-lg"></div>
+        <div class="spinner spinner-light spinner-lg"></div>
+        <div class="spinner spinner-dark spinner-lg"></div>
+    </div>
+
+    <h1>Progress Bars</h1>
+    <div class="progress-grid">
+        <div class="progress progress-primary" data-progress="70">
+            <div class="progress-bar"></div>
+        </div>
+        <div class="progress progress-secondary" data-progress="50">
+            <div class="progress-bar"></div>
+        </div>
+        <div class="progress progress-success" data-progress="90">
+            <div class="progress-bar"></div>
+        </div>
+        <div class="progress progress-danger" data-progress="35">
+            <div class="progress-bar"></div>
+        </div>
+        <div class="progress progress-warning" data-progress="60">
+            <div class="progress-bar"></div>
+        </div>
+        <div class="progress progress-info" data-progress="80">
+            <div class="progress-bar"></div>
+        </div>
+        <div class="progress progress-light" data-progress="40">
+            <div class="progress-bar"></div>
+        </div>
+        <div class="progress progress-dark" data-progress="95">
+            <div class="progress-bar"></div>
+        </div>
+    </div>
+
+    <h1>Inputs</h1>
+    <div class="form-card card-primary">
+        <div class="form-col form-col-6">
+            <input type="text" class="input" placeholder="First Name" />
+        </div>
+        <div class="form-col form-col-6">
+            <input type="text" class="input" placeholder="Last Name" />
+        </div>
+
+        <div class="form-col form-col-12">
+            <input type="email" class="input" placeholder="Email Address" />
+        </div>
+
+        <div class="form-col form-col-4">
+            <input type="text" class="input" placeholder="City" />
+        </div>
+        <div class="form-col form-col-4">
+            <input type="text" class="input" placeholder="State" />
+        </div>
+        <div class="form-col form-col-4">
+            <input type="text" class="input" placeholder="ZIP" />
+        </div>
+
+        <div class="form-col form-col-12">
+            <div class="input-group">
+                <span class="input-group-text">@</span>
+                <input type="text" class="input" placeholder="username" />
+            </div>
+        </div>
+
+        <div class="form-col form-col-12">
+            <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input type="text" class="input invalid" placeholder="Amount" />
+            </div>
+            <div class="input-tooltip">This amount is not valid.</div>
+        </div>
+
+        <div class="form-col form-col-1">
+            <label class="input-label">
+                <input type="checkbox" class="input-check" />
+                Accept Terms
+            </label>
+        </div>
+
+        <div class="form-col form-col-11">
+            <label class="input-label">
+                <input type="checkbox" class="input-check" checked />
+                Subscribe to newsletter
+            </label>
+        </div>
+        
+        <div class="form-col form-col-1">
+            <label class="input-label invalid">
+                <input type="checkbox" class="input-check" />
+                Accept Terms
+            </label>
+        </div>
+        
+        <div class="form-col form-col-11">
+            <label class="input-label">
+                <input type="checkbox" disabled class="input-check" checked />
+                Subscribe to newsletter
+            </label>
+        </div>
+
+        <div class="form-col form-col-12">
+            <button class="btn btn-primary">Submit</button>
+        </div>
+
+    </div>
+</html>
