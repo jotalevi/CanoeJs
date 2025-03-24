@@ -1,0 +1,8 @@
+V0.2.8
+    - Added ChangeLog to repo
+    - Fixed 'fadeAlert' function in util js
+    - ...
+V0.2.7
+    - Fixed missing 'to' field in Link widget
+    - Fixed missing field assignations in several widgets
+    - Updated Template project

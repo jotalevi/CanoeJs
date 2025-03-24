@@ -6,7 +6,7 @@ function toggleTheme() {
 }
 
 function fadeAlert(e) {
-  let t = e.parentElement;
+  let t = e.target.parentElement;
   t.classList.add("fade-out"), setTimeout(() => t.remove(), 500);
 }
 
