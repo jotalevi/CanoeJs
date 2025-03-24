@@ -2,13 +2,13 @@ import DefaultStyles from "../enum/defaultStyles";
 import randomId from "../utils/randomId";
 import Widget from "../Widget";
 
-export default class Button implements Widget {
+export default class Alert implements Widget {
     id: string;
     classes: string[];
     css: {};
-    callbacks: {};
     text: string;
     style: DefaultStyles;
+    isClosable: boolean;
 
     constructor(
         opts: Partial<{
@@ -16,18 +16,18 @@ export default class Button implements Widget {
             id: string,
             classes: string[],
             css: {},
-            callbacks: {},
             text: string,
+            isClosable: boolean,
         }>
     ) {
         this.id = opts.id ?? randomId(5);
         this.classes = opts.classes;
         this.css = opts.css;
-        this.callbacks = opts.callbacks;
-        this.text = opts.text ?? 'Button';
+        this.text = opts.text ?? 'Alert';
+        this.isClosable = opts.isClosable ?? false;
 
-        this.classes.push('btn');
-        this.classes.push('btn-' + (opts.style ?? DefaultStyles.PRIMARY).toString());
+        this.classes.push('alert');
+        this.classes.push('alert-' + (opts.style ?? DefaultStyles.PRIMARY).toString());
 
         return this;
     }
@@ -46,9 +46,15 @@ export default class Button implements Widget {
             thisElement.style[key] = this.css[key];
         });
 
-        Object.keys(this.callbacks).forEach((key) => {
-            thisElement.addEventListener(key, this.callbacks[key]);
-        });
+        if (this.isClosable) {
+            let closeButton = document.createElement("button");
+            closeButton.classList.add("close-btn");
+            closeButton.setAttribute("data-bs-dismiss", "alert");
+            closeButton.setAttribute("aria-label", "Close");
+            closeButton.innerHTML = "×";
+            closeButton.addEventListener("click", fadeAlert(this));
+            thisElement.appendChild(closeButton);
+        }
 
         return thisElement;
     }

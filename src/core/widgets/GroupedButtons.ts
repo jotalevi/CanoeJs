@@ -5,20 +5,20 @@ import Button from "./Button";
 export default class GroupedButtons implements Widget {
     id: string;
     classes: string[];
-    style: {};
+    css: {};
     buttons: Button[];
 
     constructor(
         opts: Partial<{
             id: string;
             classes: string[];
-            style: {};
+            css: {};
             buttons: Button[];
         }>
     ) {
         this.id = opts.id ?? randomId(5);
         this.classes = opts.classes ?? [];
-        this.style = opts.style ?? {};
+        this.css = opts.css ?? {};
 
 
         if (!opts.buttons)
@@ -40,11 +40,13 @@ export default class GroupedButtons implements Widget {
             thisElement.classList.add(className);
         });
 
-        Object.keys(this.style).forEach((key) => {
-            thisElement.style[key] = this.style[key];
+        Object.keys(this.css).forEach((key) => {
+            thisElement.style[key] = this.css[key];
         });
 
-        
+        this.buttons.forEach((button) => {
+            thisElement.appendChild(button.render());
+        });
 
         return thisElement;
     }

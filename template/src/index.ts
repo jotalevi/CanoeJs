@@ -1,6 +1,4 @@
 import { Canoe, Router } from "canoejs";
-import HomePage from "./pages/HomePage";
-import DocsPage from "./pages/DocsPage";
 
 // This runs before every render cycle, here you should only add elements to the head of the document, the document itself and window.
 Canoe.preBuild(() => {
@@ -17,18 +15,5 @@ Canoe.postBuild(() => {
 })
 
 Canoe.buildApp("root", { url: '/' }, (state) => {
-  console.log("State: ", state);
-  return new Router({
-    routes: [
-      {
-        route: '/',
-        widget: new HomePage({})
-      },
-      {
-        route: '/docs',
-        widget: new DocsPage()
-      }
-    ],
-    currentRoute: state.url ?? '/',
-  });
+
 }).render();
