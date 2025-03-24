@@ -1,24 +1,29 @@
 import Widget from "./core/Widget";
 import Render from "./core/Render";
 
-import H from "./core/widgets/H";
-import Div from "./core/widgets/Div";
-import TextInput from "./core/widgets/TextInput";
-import Row from "./core/widgets/Row";
-import Col from "./core/widgets/Col";
-import Card from "./core/widgets/Card";
-import Image from "./core/widgets/Image";
+import Alert from "./core/widgets/Alert";
+import Badge from "./core/widgets/Badge";
 import Button from "./core/widgets/Button";
-import Router from "./core/widgets/Router";
+import Card from "./core/widgets/Card";
+import Col from "./core/widgets/Col";
+import Container from "./core/widgets/Container";
+import GroupedButtons from "./core/widgets/GroupedButtons";
+import H from "./core/widgets/H";
 import Link from "./core/widgets/Link";
+import P from "./core/widgets/P";
+import Progress from "./core/widgets/Progress";
+import Row from "./core/widgets/Row";
+import Spinner from "./core/widgets/Spinner";
+
 import FlexAlignContent from "./core/enum/FlexAlignContent";
 import FlexAlignItems from "./core/enum/FlexAlignItems";
 import FlexJustify from "./core/enum/FlexJustify";
 import FlexWrap from "./core/enum/FlexWrap";
+import DefaultStyles from "./core/enum/DefaultStyles";
+
 import randomId from "./core/utils/randomId";
 import addHistoryEventsListener from "./core/utils/historyEvents";
-
-import { hashString } from "./core/utils/hashStr";
+import hashString from "./core/utils/hashStr";
 
 class Canoe {
   private static rootId = "";
@@ -115,4 +120,29 @@ class Canoe {
   }
 }
 
-export { Widget, Render, Canoe, H, Div, Row, Col, TextInput, hashString, Card, Button, Image, Router, Link, FlexAlignContent, FlexAlignItems, FlexJustify, FlexWrap, randomId };
+export {
+  Canoe,
+  Widget,
+  Render,
+  Alert,
+  Badge,
+  Button,
+  Card,
+  Col,
+  Container,
+  GroupedButtons,
+  H,
+  Link,
+  P,
+  Progress,
+  Row,
+  Spinner,
+  FlexAlignContent,
+  FlexAlignItems,
+  FlexJustify,
+  FlexWrap,
+  DefaultStyles,
+  randomId,
+  addHistoryEventsListener,
+  hashString
+}

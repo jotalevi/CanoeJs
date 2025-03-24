@@ -1,11 +1,42 @@
 #!/usr/bin/env node
 import * as fs from "fs";
 import * as path from "path";
-import { execSync } from "child_process";
+import { execSync, exec } from "child_process";
 
 const args = process.argv.slice(2);
 
-if (args[0] === "new" && args[1]) {
+if (args[0] === "--v" || args[0] === "-v" || args[0] === "v") {
+    const pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
+    const localVersion = pkg.version.split("+")[0];
+    const localNameArr = pkg.version.split("+")[1].split("-");
+
+    const localName = localNameArr
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+
+    console.log(`CanoeJs v${localVersion} (${localName})`);
+
+    exec(`npm show canoejs version --json`, (error, stdout, stderr) => {
+        if (error) {
+            console.error(`Error checking latest version: ${stderr || error.message}`);
+            return;
+        }
+
+        try {
+            const latestVersion = JSON.parse(stdout);
+            if (latestVersion !== localVersion) {
+                console.log(`\nUpdate available: ${localVersion} → ${latestVersion}`);
+                console.log(`Run \`npm install -g canoejs\` to update.`);
+            } else {
+                console.log("You're using the latest version.");
+            }
+        } catch (e) {
+            console.error("Could not parse version info:", e.message);
+        }
+    });
+
+
+} else if (args[0] === "new" && args[1]) {
     const projectName = args[1];
     const currentDir = process.cwd();
     const templateDir = path.join(__dirname, "template");

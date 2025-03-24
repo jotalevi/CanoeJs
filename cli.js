@@ -5,7 +5,35 @@ var fs = require("fs");
 var path = require("path");
 var child_process_1 = require("child_process");
 var args = process.argv.slice(2);
-if (args[0] === "new" && args[1]) {
+if (args[0] === "--v" || args[0] === "-v" || args[0] === "v") {
+    var pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
+    var localVersion_1 = pkg.version.split("+")[0];
+    var localNameArr = pkg.version.split("+")[1].split("-");
+    var localName = localNameArr
+        .map(function (word) { return word.charAt(0).toUpperCase() + word.slice(1); })
+        .join(' ');
+    console.log("CanoeJs v".concat(localVersion_1, " (").concat(localName, ")"));
+    (0, child_process_1.exec)("npm show canoejs version --json", function (error, stdout, stderr) {
+        if (error) {
+            console.error("Error checking latest version: ".concat(stderr || error.message));
+            return;
+        }
+        try {
+            var latestVersion = JSON.parse(stdout);
+            if (latestVersion !== localVersion_1) {
+                console.log("\nUpdate available: ".concat(localVersion_1, " \u2192 ").concat(latestVersion));
+                console.log("Run `npm install -g canoejs` to update.");
+            }
+            else {
+                console.log("You're using the latest version.");
+            }
+        }
+        catch (e) {
+            console.error("Could not parse version info:", e.message);
+        }
+    });
+}
+else if (args[0] === "new" && args[1]) {
     var projectName = args[1];
     var currentDir = process.cwd();
     var templateDir = path.join(__dirname, "template");
@@ -29,7 +57,7 @@ if (args[0] === "new" && args[1]) {
     fs.writeFileSync(path.join(projectPath, "package.json"), JSON.stringify(packagejson, null, 2));
     console.log("📂 Project files copied successfully!");
     // Create .gitignore
-    var gitignoreContent = "node_modules\ndist\n.env\npackage-lock.json\n";
+    var gitignoreContent = "node_modules/\npublic/dist/\npackage-lock.json\n.env";
     fs.writeFileSync(path.join(projectPath, ".gitignore"), gitignoreContent);
     console.log("🙈 .gitignore file created!");
     // Navigate to project directory and install dependencies

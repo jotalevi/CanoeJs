@@ -1,7 +1,5 @@
 import SHA256 from "crypto-js/sha256";
 
-function hashString(input: string): string {
+export default function hashString(input: string): string {
     return SHA256(input).toString();
 }
-
-export { hashString };
