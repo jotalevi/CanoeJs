@@ -1,13 +1,15 @@
-import { Canoe, Col, FlexAlignContent, FlexAlignItems, FlexJustify, FlexWrap, Row } from "canoejs";
+import { Alert, Canoe, Col, DefaultStyles, FlexAlignContent, FlexAlignItems, FlexJustify, FlexWrap, H, Link, Row } from "canoejs";
 import Logo from "./widgets/Logo";
-import TempText from "./widgets/TempText";
 
 // This runs before every render cycle, here you should only add elements to the head of the document, the document itself and window.
 Canoe.preBuild(() => {
   // This is how you can measure the time it takes to render the page
   window['timeStart'] = performance.now();
 
-  document.body.style.background = "linear-gradient(to top, rgba(135, 135, 250, 0.05), rgba(25, 25, 180, 0.1))";
+  document.body.style.height = "100%";
+  document.body.style.width = "100%";
+  document.body.style.margin = "0";
+  document.body.style.padding = "0";
 });
 
 // Here you can start adding elements to the page, it runs after every render cycle and here you should refer to any member of document or window
@@ -18,33 +20,24 @@ Canoe.postBuild(() => {
 
 Canoe.buildApp("root", { url: '/' }, (state) => {
   return new Col({
+    css: {
+      width: "100%",
+      height: "100%",
+      background: "linear-gradient(to top, rgba(135, 135, 250, 0.05), rgba(25, 25, 180, 0.1))",
+    },
     flexAlignContent: FlexAlignContent.CENTER,
     flexAlignItems: FlexAlignItems.CENTER,
     flexJustify: FlexJustify.CENTER,
     flexWrap: FlexWrap.NOWRAP,
     children: [
       new Logo({}),
-      new TempText({
-        id: "title",
+      new H({
+        size: 1,
         text: "CanoeJS",
-        css: {
-          fontSize: "20px",
-          color: "black",
-          marginTop: "20px",
-          fontFamily: "Arial, sans-serif",
-          textAlign: "center",
-        }
       }),
-      new TempText({
-        id: "title",
+      new H({
+        size: 3,
         text: "A lightweight framework for building web applications",
-        css: {
-          fontSize: "16px",
-          color: "black",
-          marginTop: "10px",
-          fontFamily: "Arial, sans-serif",
-          textAlign: "center",
-        }
       }),
       new Row({
         flexAlignContent: FlexAlignContent.CENTER,
@@ -52,62 +45,32 @@ Canoe.buildApp("root", { url: '/' }, (state) => {
         flexJustify: FlexJustify.CENTER,
         flexWrap: FlexWrap.NOWRAP,
         children: [
-          new TempText({
-            id: "l1",
+          new Link({
             text: "GitHub",
-            css: {
-              fontSize: "16px",
-              color: "black",
-              marginTop: "10px",
-              fontFamily: "Arial, sans-serif",
-              textAlign: "center",
-            }
+            to: "https://github.com/jotalevi/CanoeJs",
           }),
-          new TempText({
-            id: "s1",
+          new H({
+            size: 5,
             text: "|",
-            css: {
-              fontSize: "16px",
-              color: "black",
-              marginTop: "10px",
-              fontFamily: "Arial, sans-serif",
-              textAlign: "center",
-            }
           }),
-          new TempText({
-            id: "l2",
+          new Link({
             text: "Documentation",
-            css: {
-              fontSize: "16px",
-              color: "black",
-              marginTop: "10px",
-              fontFamily: "Arial, sans-serif",
-              textAlign: "center",
-            }
+            to: "/docs",
           }),
-          new TempText({
-            id: "s2",
+          new H({
+            size: 5,
             text: "|",
-            css: {
-              fontSize: "16px",
-              color: "black",
-              marginTop: "10px",
-              fontFamily: "Arial, sans-serif",
-              textAlign: "center",
-            }
           }),
-          new TempText({
-            id: "l3",
+          new Link({
             text: "Examples",
-            css: {
-              fontSize: "16px",
-              color: "black",
-              marginTop: "10px",
-              fontFamily: "Arial, sans-serif",
-              textAlign: "center",
-            }
-          })
+            to: "/Examples",
+          }),
         ]
+      }),
+      new Alert({
+        text: "This version is deprecated, please use the latest version of CanoeJS.",
+        style: DefaultStyles.WARNING,
+        isClosable: true,
       })
     ]
   })

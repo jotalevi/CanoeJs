@@ -11,14 +11,15 @@ export default class Link implements Widget {
     constructor(
         opts: Partial<{
             id: string;
-            size: number | string;
+            to: string;
             text: string;
             css: {};
         }>
     ) {
-        this.id = opts.id || randomId();
-        this.text = opts.text || "";
-        this.css = opts.css || {};
+        this.id = opts.id ?? randomId();
+        this.to = opts.to ?? "/"; // Default to root
+        this.text = opts.text ?? "";
+        this.css = opts.css ?? {};
 
         return this;
     }

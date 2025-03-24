@@ -16,12 +16,12 @@ export default class Container implements Widget {
         }>
     ) {
         this.id = opts.id ?? randomId(5);
+
         this.classes = opts.classes ?? [];
-        this.css = opts.css ?? {};
-
-        this.children = opts.children ?? [];
-
         this.classes.push('container');
+
+        this.css = opts.css ?? {};
+        this.children = opts.children ?? [];
 
         return this;
     }

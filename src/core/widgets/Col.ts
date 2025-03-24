@@ -25,9 +25,11 @@ export default class Col implements Widget {
         }>
     ) {
         this.id = opts.id ?? randomId(5);
-        this.classes = opts.classes ?? [];
-        this.css = opts.css ?? {};
 
+        this.classes = opts.classes ?? [];
+        this.classes.push('col');
+
+        this.css = opts.css ?? {};
         this.css["align-items"] = opts.flexAlignItems ?? FlexAlignItems.CENTER;
         this.css["justify-content"] = opts.flexJustify ?? FlexJustify.START;
         this.css["align-content"] = opts.flexAlignContent ?? FlexAlignContent.START;
@@ -35,8 +37,6 @@ export default class Col implements Widget {
         this.css["gap"] = "0.5rem";
 
         this.children = opts.children ?? [];
-
-        this.classes.push('col');
 
         return this;
     }

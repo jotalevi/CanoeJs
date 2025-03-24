@@ -14,9 +14,9 @@ export default class P implements Widget {
             css: {};
         }>
     ) {
-        this.id = opts.id || randomId();
-        this.text = opts.text || "";
-        this.css = opts.css || {};
+        this.id = opts.id ?? randomId();
+        this.text = opts.text ?? "";
+        this.css = opts.css ?? {};
 
         return this;
     }

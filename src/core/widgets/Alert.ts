@@ -9,6 +9,8 @@ export default class Alert implements Widget {
     text: string;
     style: DefaultStyles;
     isClosable: boolean;
+    onClose: (e: any) => void;
+    onClick: (e: any) => void;
 
     constructor(
         opts: Partial<{
@@ -18,16 +20,22 @@ export default class Alert implements Widget {
             css: {},
             text: string,
             isClosable: boolean,
+            onClose: (e: any) => void,
+            onClick: (e: any) => void,
         }>
     ) {
         this.id = opts.id ?? randomId(5);
-        this.classes = opts.classes;
-        this.css = opts.css;
+
+        this.classes = opts.classes ?? [];
+        this.classes.push('alert');
+        this.classes.push('alert-' + (opts.style ?? DefaultStyles.PRIMARY).toString());
+
+        this.css = opts.css ?? {};
         this.text = opts.text ?? 'Alert';
         this.isClosable = opts.isClosable ?? false;
 
-        this.classes.push('alert');
-        this.classes.push('alert-' + (opts.style ?? DefaultStyles.PRIMARY).toString());
+        this.onClose = opts.onClose ?? ((e: any) => { });
+        this.onClick = opts.onClick ?? ((e: any) => { });
 
         return this;
     }
@@ -52,9 +60,16 @@ export default class Alert implements Widget {
             closeButton.setAttribute("data-bs-dismiss", "alert");
             closeButton.setAttribute("aria-label", "Close");
             closeButton.innerHTML = "×";
-            closeButton.addEventListener("click", fadeAlert(this));
+            closeButton.addEventListener("click", (e) => {
+                fadeAlert(e)
+                this.onClose(e);
+            });
             thisElement.appendChild(closeButton);
         }
+
+        thisElement.addEventListener("click", (e) => {
+            this.onClick(e);
+        });
 
         return thisElement;
     }

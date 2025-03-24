@@ -21,13 +21,14 @@ export default class Badge implements Widget {
         }>
     ) {
         this.id = opts.id ?? randomId(5);
-        this.classes = opts.classes;
-        this.css = opts.css;
-        this.callbacks = opts.callbacks;
-        this.children = opts.children ?? [];
 
+        this.classes = opts.classes ?? [];
         this.classes.push('badge');
         this.classes.push('badge-' + (opts.style ?? DefaultStyles.PRIMARY).toString());
+
+        this.css = opts.css ?? {};
+        this.callbacks = opts.callbacks ?? {};
+        this.children = opts.children ?? [];
 
         return this;
     }

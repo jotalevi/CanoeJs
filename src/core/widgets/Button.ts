@@ -21,13 +21,14 @@ export default class Button implements Widget {
         }>
     ) {
         this.id = opts.id ?? randomId(5);
-        this.classes = opts.classes;
-        this.css = opts.css;
-        this.callbacks = opts.callbacks;
-        this.text = opts.text ?? 'Button';
 
+        this.classes = opts.classes ?? [];
         this.classes.push('btn');
         this.classes.push('btn-' + (opts.style ?? DefaultStyles.PRIMARY).toString());
+
+        this.css = opts.css ?? {};
+        this.callbacks = opts.callbacks ?? {};
+        this.text = opts.text ?? 'Button';
 
         return this;
     }

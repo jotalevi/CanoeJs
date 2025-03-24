@@ -15,10 +15,10 @@ export default class H implements Widget {
             css: {};
         }>
     ) {
-        this.id = opts.id || randomId();
-        this.size = opts.size || 1;
-        this.text = opts.text || "";
-        this.css = opts.css || {};
+        this.id = opts.id ?? randomId();
+        this.size = opts.size ?? 1;
+        this.text = opts.text ?? "";
+        this.css = opts.css ?? {};
 
         return this;
     }
