@@ -18,7 +18,7 @@ Canoe.postBuild(() => {
   console.log("Execution time: " + (performance.now() - window['timeStart']) + "ms");
 })
 
-Canoe.buildApp("root", { url: '/' }, (state) => {
+Canoe.buildApp("root", { url: '/', showAlert: true }, (state) => {
   return new Col({
     css: {
       width: "100%",
@@ -55,7 +55,7 @@ Canoe.buildApp("root", { url: '/' }, (state) => {
           }),
           new Link({
             text: "Documentation",
-            to: "/docs",
+            to: "/docs"
           }),
           new H({
             size: 5,
@@ -63,15 +63,17 @@ Canoe.buildApp("root", { url: '/' }, (state) => {
           }),
           new Link({
             text: "Examples",
-            to: "/Examples",
+            to: "/examples"
           }),
         ]
       }),
-      new Alert({
-        text: "This version is deprecated, please use the latest version of CanoeJS.",
-        style: DefaultStyles.WARNING,
-        isClosable: true,
-      })
+      Canoe.getState().showAlert ?
+        new Alert({
+          text: "This version is deprecated, please use the latest version of CanoeJS.",
+          style: DefaultStyles.WARNING,
+          isClosable: true,
+          onClose: () => Canoe.setState({ showAlert: false }),
+        }) : null,
     ]
   })
 }).render();
