@@ -1,4 +1,4 @@
-import DefaultStyles from "../enum/defaultStyles";
+import DefaultStyles from "../enum/DefaultStyles";
 import randomId from "../utils/randomId";
 import Widget from "../Widget";
 

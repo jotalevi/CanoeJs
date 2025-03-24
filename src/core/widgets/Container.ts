@@ -1,32 +1,25 @@
 import randomId from "../utils/randomId";
 import Widget from "../Widget";
-import Button from "./Button";
 
-export default class GroupedButtons implements Widget {
+export default class Container implements Widget {
     id: string;
     classes: string[];
     css: {};
-    buttons: Button[];
+    children: Widget[];
 
     constructor(
         opts: Partial<{
             id: string;
             classes: string[];
             css: {};
-            buttons: Button[];
+            children: Widget[];
         }>
     ) {
         this.id = opts.id ?? randomId(5);
         this.classes = opts.classes ?? [];
         this.css = opts.css ?? {};
 
-
-        if (!opts.buttons || opts.buttons.length === 0)
-            throw new Error('GroupedButtons should recieve at least one button.');
-        
-        this.buttons = opts.buttons;
-
-        this.classes.push('btn-group');
+        this.classes.push('container');
 
         return this;
     }
@@ -44,8 +37,8 @@ export default class GroupedButtons implements Widget {
             thisElement.style[key] = this.css[key];
         });
 
-        this.buttons.forEach((button) => {
-            thisElement.appendChild(button.render());
+        this.children.forEach((child) => {
+            thisElement.appendChild(child.render());
         });
 
         return thisElement;
