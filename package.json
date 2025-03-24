@@ -1,6 +1,6 @@
 {
   "name": "canoejs",
-  "version": "0.2.5+lago-huechulafquen",
+  "version": "0.2.6+lago-huechulafquen",
   "description": "A lightweight, widget-based UI framework",
   "main": "src/canoe.ts",
   "bin": {

@@ -34,6 +34,8 @@ export default class Row implements Widget {
         this.css["flex-wrap"] = opts.flexWrap ?? FlexWrap.NOWRAP;
         this.css["gap"] = "0.5rem";
 
+        this.children = opts.children ?? [];
+
         this.classes.push('row');
 
         return this;

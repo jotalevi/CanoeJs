@@ -19,6 +19,8 @@ export default class Container implements Widget {
         this.classes = opts.classes ?? [];
         this.css = opts.css ?? {};
 
+        this.children = opts.children ?? [];
+
         this.classes.push('container');
 
         return this;

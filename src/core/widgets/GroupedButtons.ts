@@ -20,7 +20,6 @@ export default class GroupedButtons implements Widget {
         this.classes = opts.classes ?? [];
         this.css = opts.css ?? {};
 
-
         if (!opts.buttons || opts.buttons.length === 0)
             throw new Error('GroupedButtons should recieve at least one button.');
         

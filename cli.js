@@ -6,7 +6,7 @@ var path = require("path");
 var child_process_1 = require("child_process");
 var args = process.argv.slice(2);
 if (args[0] === "--v" || args[0] === "-v" || args[0] === "v") {
-    var pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
+    var pkg = JSON.parse(fs.readFileSync(path.join(__dirname, "package.json"), 'utf8'));
     var localVersion_1 = pkg.version.split("+")[0];
     var localNameArr = pkg.version.split("+")[1].split("-");
     var localName = localNameArr

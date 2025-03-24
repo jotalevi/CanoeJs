@@ -6,7 +6,7 @@ import { execSync, exec } from "child_process";
 const args = process.argv.slice(2);
 
 if (args[0] === "--v" || args[0] === "-v" || args[0] === "v") {
-    const pkg = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
+    const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, "package.json"), 'utf8'));
     const localVersion = pkg.version.split("+")[0];
     const localNameArr = pkg.version.split("+")[1].split("-");
 
