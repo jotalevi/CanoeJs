@@ -1,5 +1,6 @@
-import Widget from "./core/Widget";
 import Render from "./core/Render";
+import Router from "./core/Router";
+import Widget from "./core/Widget";
 
 import Alert from "./core/widgets/Alert";
 import Badge from "./core/widgets/Badge";
@@ -122,8 +123,9 @@ class Canoe {
 
 export {
   Canoe,
-  Widget,
   Render,
+  Router,
+  Widget,
   Alert,
   Badge,
   Button,
