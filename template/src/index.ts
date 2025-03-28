@@ -1,4 +1,4 @@
-import { Alert, Canoe, Col, DefaultStyles, FlexAlignContent, FlexAlignItems, FlexJustify, FlexWrap, H, Link, Row } from "canoejs";
+import { Alert, Canoe, Col, DefaultStyles, FlexAlignContent, FlexAlignItems, FlexJustify, FlexWrap, H, Link, Router, Row } from "canoejs";
 import Logo from "./widgets/Logo";
 
 // This runs before every render cycle, here you should only add elements to the head of the document, the document itself and window.
@@ -18,6 +18,78 @@ Canoe.postBuild(() => {
   console.log("Execution time: " + (performance.now() - window['timeStart']) + "ms");
 })
 
+Router.addRoute('/', () => {
+  return new Col({
+    children: [
+      new H({
+        size: 1,
+        text: "/",
+      }),
+      new H({
+        size: 3,
+        text: "This page should be rendered when the URL is /",
+      }),
+      new H({
+        size: 3,
+        text: "The url actually is " + window.location.pathname,
+      }),
+      new Link({
+        text: "Go to /test",
+        to: "/test",
+      })
+    ]
+  });
+});
+
+Router.addRoute('/test', () => {
+  return new Col({
+    children: [
+      new H({
+        size: 1,
+        text: "/test",
+      }),
+      new H({
+        size: 3,
+        text: "This page should be rendered when the URL is /test",
+      }),
+      new H({
+        size: 3,
+        text: "The url actually is " + window.location.pathname,
+      }),
+      new Link({
+        text: "Go to /1/test",
+        to: "/1/test",
+      }),
+      new Link({
+        text: "Go to /2/test",
+        to: "/2/test",
+      })
+    ]
+  });
+});
+
+Router.addRoute('/:id/test', () => {
+  return new Col({
+    children: [
+      new H({
+        size: 1,
+        text: "/:id/test",
+      }),
+      new H({
+        size: 3,
+        text: "This page should be rendered when the URL is /" + Canoe.getState().id + "/test",
+      }),
+      new H({
+        size: 3,
+        text: "The url actually is " + window.location.pathname,
+      })
+    ]
+  });
+});
+
+Canoe.buildApp("root", { url: '/', showAlert: true }, Router.render).render();
+
+/*
 Canoe.buildApp("root", { url: '/', showAlert: true }, (state) => {
   return new Col({
     css: {
@@ -77,3 +149,4 @@ Canoe.buildApp("root", { url: '/', showAlert: true }, (state) => {
     ]
   })
 }).render();
+*/

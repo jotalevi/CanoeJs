@@ -1,35 +1,60 @@
+import { Canoe, Col, H } from "../canoe";
 import Widget from "./Widget";
 
 export default class Router {
     private static routes: { [key: string]: () => Widget } = {};
 
     public static addRoute(path: string, component: () => Widget) {
-        this.routes[path] = component;
+        Router.routes[path] = component;
+
+        console.log("Route added: " + path);
+        console.log(Router.routes);
     }
 
-    public static render(path: string = "/"): Widget | null {
-        if (this.routes[path]) {
-            return this.routes[path]();
+    public static render(state): Widget | null {
+        console.log("Requested Path:", state.url)
+        console.log("Routes Available:", Router.routes)
+
+        if (Router.routes[state.url]) {
+            console.log("Rendering route: " + state.url);
+            return Router.routes[state.url]();
         }
 
-        let reqRoute = path.split("/");
+        let requiredRouteArr = state.url.split("/");
+        for (const route of Object.keys(Router.routes)) {
+            let routeArr = route.split("/");
 
-        for (const route of Object.keys(this.routes)) {
-            let routeParts = route.split("/");
-            if (routeParts.length !== reqRoute.length) {
-                continue;
-            }
-            
-            for (let i = 0; i < routeParts.length; i++) {
-                if (routeParts[i] !== reqRoute[i] && !routeParts[i].startsWith(":")) {
+            if (requiredRouteArr.length !== routeArr.length) continue;
+
+            let isMatch = true;
+            let params = {}
+            for (let i = 0; i < routeArr.length; i++) {
+                if (routeArr[i] !== requiredRouteArr[i] && !routeArr[i].startsWith(":")) {
+                    isMatch = false;
                     break;
                 }
-            }
 
-            return this.routes[route]();
+                if (routeArr[i].startsWith(":")) {
+                    params[routeArr[i].replace(':', '')] = requiredRouteArr[i];
+                }
+            }
+            Canoe.setState({
+                ...Canoe.getState(),
+                ...params,
+            });
+
+            return Router.routes[route]();
+
         }
 
-        return null;
+        return new Col({
+            children: [
+                new H({
+                    size: 1,
+                    text: "404",
+                })
+            ]
+        })
     }
 
     public static navigate(url: string): void {
