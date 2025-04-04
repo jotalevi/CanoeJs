@@ -74,7 +74,7 @@ if (args[0] === "--v" || args[0] === "-v" || args[0] === "v") {
     // Navigate to project directory and install dependencies
     try {
         console.log("📦 Installing dependencies...");
-        execSync(`cd ${projectPath} && npm install`, { stdio: "inherit" });
+        execSync(`cd ${projectPath} && npm install && npm i -g serve`, { stdio: "inherit" });
         console.log("✅ Dependencies installed!");
         console.log(`🎉 CanoeJs project '${projectName}' is ready to go!`);
         console.log(`👉 Run the following to start:`);

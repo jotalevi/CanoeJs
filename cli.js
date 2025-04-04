@@ -63,7 +63,7 @@ else if (args[0] === "new" && args[1]) {
     // Navigate to project directory and install dependencies
     try {
         console.log("📦 Installing dependencies...");
-        (0, child_process_1.execSync)("cd ".concat(projectPath, " && npm install"), { stdio: "inherit" });
+        (0, child_process_1.execSync)("cd ".concat(projectPath, " && npm install && npm i -g serve"), { stdio: "inherit" });
         console.log("✅ Dependencies installed!");
         console.log("\uD83C\uDF89 CanoeJs project '".concat(projectName, "' is ready to go!"));
         console.log("\uD83D\uDC49 Run the following to start:");

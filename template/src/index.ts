@@ -76,6 +76,10 @@ Router.addRoute('/:id/test', () => {
         text: "/:id/test",
       }),
       new H({
+        size: 5,
+        text: "this is how you take url params, in this case the id is Canoe.getState().id ->" + Canoe.getState().id,
+      }),
+      new H({
         size: 3,
         text: "This page should be rendered when the URL is /" + Canoe.getState().id + "/test",
       }),
