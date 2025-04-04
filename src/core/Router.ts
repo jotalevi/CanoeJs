@@ -2,11 +2,23 @@ import { Canoe, Col, H } from "../canoe";
 import Widget from "./Widget";
 
 export default class Router {
-    private static routes: { [key: string]: () => Widget } = {};
+    routesp = {
+        "/": {
+            component: () => new H({ text: "Home" }),
+            title: "Home",
+        }
+    }
+    private static routes: { [key: string]: {
+                                component: () => Widget
+                                title: string
+                            }} = {};
 
-    public static addRoute(path: string, component: () => Widget) {
-        Router.routes[path] = component;
-
+    public static addRoute(path: string, component: () => Widget, title: string | null = null): void {
+        Router.routes[path] = {
+            component: component,
+            title: title == null ? path : title,
+        }
+        
         console.log("Route added: " + path);
         console.log(Router.routes);
     }
@@ -17,7 +29,8 @@ export default class Router {
 
         if (Router.routes[state.url]) {
             console.log("Rendering route: " + state.url);
-            return Router.routes[state.url]();
+            Canoe.setTitle(Router.routes[state.url].title);
+            return Router.routes[state.url].component();
         }
 
         let requiredRouteArr = state.url.split("/");
@@ -43,10 +56,12 @@ export default class Router {
                 ...params,
             });
 
-            return Router.routes[route]();
+            Canoe.setTitle(Router.routes[route].title);
+            return Router.routes[route].component();
 
         }
 
+        Canoe.setTitle("Page not found");
         return new Col({
             children: [
                 new H({

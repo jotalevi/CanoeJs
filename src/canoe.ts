@@ -37,6 +37,12 @@ class Canoe {
   private static postBuildCallbacks: Function[] = [];
   private static preBuildCallbacks: Function[] = [];
 
+  static setTitle(title: string): void {
+    if (title) {
+      document.title = title;
+    }
+  }
+
   static getState(): any {
     return this.state;
   }
