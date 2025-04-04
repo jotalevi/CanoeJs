@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "bundle": "esbuild src/index.ts --bundle --minify --sourcemap=external --platform=node --target=node16 --legal-comments=none --outfile=public/dist/bundle.min.js",
-    "serve": "npx http-server public -p 3000 -c-1"
+    "serve": "npx http-server public -p 3000 -c-1 --fallback index.html"
   },
   "dependencies": {
     "canoejs": "latest"

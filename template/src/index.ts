@@ -87,7 +87,7 @@ Router.addRoute('/:id/test', () => {
   });
 });
 
-Canoe.buildApp("root", { url: '/', showAlert: true }, Router.render).render();
+Canoe.buildApp("root", { url: window.location.pathname, showAlert: true }, Router.render).render();
 
 /*
 Canoe.buildApp("root", { url: '/', showAlert: true }, (state) => {
