@@ -1,4 +1,6 @@
 V0.3.5
+    - Removed package-lock.json
+V0.3.5
     - Mostly version bump.
     - Finalized Router errors, refactored some stuf before.
     - Changes to main CSS along with the main index.html for the templating (its now 100% sized).
