@@ -1,8 +1,22 @@
+V0.3.5
+    - Mostly version bump.
+    - Finalized Router errors, refactored some stuf before.
+    - Changes to main CSS along with the main index.html for the templating (its now 100% sized).
+V0.3.4
+    - Fixed Router
+    - Added Canoe.setTitle method for changing documet title
+    - Attempt to fix Serve script errors (regarding SPA Support)
+V0.3.1
+    - Fixed Router
+    - Added Canoe.setTitle method for changing documet title
+    - Attempt to fix Serve script errors (regarding SPA Support)
+V0.3.0
+    - Changed Serve scripts to suport SPAs
 V0.2.8
     - Added ChangeLog to repo
     - Fixed 'fadeAlert' function in util js
     - Updates to Template project
-    - ...
+    - Added basic router and dynamic path (with :var)
 V0.2.7
     - Fixed missing 'to' field in Link widget
     - Fixed missing field assignations in several widgets
