@@ -1,6 +1,6 @@
 {
   "name": "canoejs",
-  "version": "0.3.9+b14-villarica",
+  "version": "0.3.9+b15-villarica",
   "description": "A lightweight, widget-based UI framework",
   "main": "src/canoe.ts",
   "bin": {
