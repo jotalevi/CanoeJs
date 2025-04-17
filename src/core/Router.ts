@@ -1,83 +1,82 @@
 import { Canoe, Col, H } from "../canoe";
 import Widget from "./Widget";
 
+interface Route {
+    component: () => Widget;
+    title: string;
+}
+
+interface RouterState {
+    url: string;
+    [key: string]: any;
+}
+
 export default class Router {
-    routesp = {
-        "/": {
-            component: () => new H({ text: "Home" }),
-            title: "Home",
-        }
-    }
-    private static routes: { [key: string]: {
-                                component: () => Widget
-                                title: string
-                            }} = {};
+    private static routes: Record<string, Route> = {};
 
     public static addRoute(path: string, component: () => Widget, title: string | null = null): void {
         Router.routes[path] = {
-            component: component,
-            title: title == null ? path : title,
-        }
-        
-        console.log("Route added: " + path);
-        console.log(Router.routes);
+            component,
+            title: title ?? path,
+        };
+        if (Canoe.debug) console.log("Route added:", path);
     }
 
-    public static render(state): Widget | null {
-        console.log("Requested Path:", state.url)
-        console.log("Routes Available:", Router.routes)
+    public static render(state: RouterState): Widget {
+        const { url } = state;
+        const exactRoute = Router.routes[url];
 
-        if (Router.routes[state.url]) {
-            console.log("Rendering route: " + state.url);
-            Canoe.setTitle(Router.routes[state.url].title);
-            return Router.routes[state.url].component();
+        if (exactRoute) {
+            Canoe.setTitle(exactRoute.title);
+            return exactRoute.component();
         }
 
-        let requiredRouteArr = state.url.split("/");
-        for (const route of Object.keys(Router.routes)) {
-            let routeArr = route.split("/");
+        const requestedParts = url.split("/");
 
-            if (requiredRouteArr.length !== routeArr.length) continue;
+        for (const [routePath, route] of Object.entries(Router.routes)) {
+            const routeParts = routePath.split("/");
+            if (routeParts.length !== requestedParts.length) continue;
 
+            const params: Record<string, string> = {};
             let isMatch = true;
-            let params = {}
-            for (let i = 0; i < routeArr.length; i++) {
-                if (routeArr[i] !== requiredRouteArr[i] && !routeArr[i].startsWith(":")) {
+
+            for (let i = 0; i < routeParts.length; i++) {
+                if (routeParts[i].startsWith(":")) {
+                    params[routeParts[i].substring(1)] = requestedParts[i];
+                } else if (routeParts[i] !== requestedParts[i]) {
                     isMatch = false;
                     break;
                 }
-
-                if (routeArr[i].startsWith(":")) {
-                    params[routeArr[i].replace(':', '')] = requiredRouteArr[i];
-                }
             }
-            Canoe.setState({
-                ...Canoe.getState(),
-                ...params,
-            });
 
-            Canoe.setTitle(Router.routes[route].title);
-            return Router.routes[route].component();
-
+            if (isMatch) {
+                Canoe.setState({
+                    ...Canoe.getState(),
+                    ...params,
+                });
+                Canoe.setTitle(route.title);
+                return route.component();
+            }
         }
 
         Canoe.setTitle("Page not found");
-        return new Col({
-            children: [
-                new H({
-                    size: 1,
-                    text: "404",
-                })
-            ]
-        })
+        return this.notFoundComponent();
+
     }
 
     public static navigate(url: string): void {
-        if (url.includes("http") || url.includes("www")) {
+        if (/^https?:\/\//.test(url) || url.includes("www")) {
             window.open(url, "_blank");
-            return;
         } else {
             window.history.pushState({}, "", url);
         }
     }
+
+    private static notFoundComponent: () => Widget = () =>
+        new Col({ children: [new H({ size: 1, text: "404" })] });
+
+    public static setNotFoundComponent(component: () => Widget): void {
+        this.notFoundComponent = component;
+    }
+
 }

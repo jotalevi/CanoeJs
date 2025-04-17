@@ -22,3 +22,5 @@ window.addEventListener("DOMContentLoaded", () => {
         r && t && (r.style.width = `${Math.min(parseInt(t), 100)}%`);
     });
 });
+
+document.debug = false;

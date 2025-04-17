@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "scripts": {
     "bundle": "esbuild src/index.ts --bundle --minify --sourcemap=external --platform=node --target=node16 --legal-comments=none --outfile=public/dist/bundle.min.js",
-    "serve": "serve -s public -l 3000"
+    "serve": "serve -s public -l 3000",
+    "dev": "nodemon --watch src --ext ts,js,json --verbose --exec \"npm run bundle && npm run serve\""
   },
   "dependencies": {
     "canoejs": "latest"

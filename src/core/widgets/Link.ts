@@ -1,4 +1,5 @@
 import { Canoe } from "../../canoe";
+import EventLinker from "../EventLinker";
 import randomId from "../utils/randomId";
 import Widget from "../Widget";
 
@@ -30,7 +31,8 @@ export default class Link implements Widget {
         thisElement.innerText = this.text;
         thisElement.classList.add("a");
 
-        thisElement.addEventListener("click", () => {
+        thisElement.setAttribute('eid', randomId());
+        EventLinker.addEvent(thisElement, "click", (e) => {
             Canoe.navigate(this.to);
         });
 

@@ -1,4 +1,5 @@
 import DefaultStyles from "../enum/DefaultStyles";
+import EventLinker from "../EventLinker";
 import randomId from "../utils/randomId";
 import Widget from "../Widget";
 
@@ -60,16 +61,21 @@ export default class Alert implements Widget {
             closeButton.setAttribute("data-bs-dismiss", "alert");
             closeButton.setAttribute("aria-label", "Close");
             closeButton.innerHTML = "×";
-            closeButton.addEventListener("click", (e) => {
+
+            closeButton.setAttribute('eid', randomId(15));
+            EventLinker.addEvent(closeButton, "click", (e) => {
                 fadeAlert(e)
                 this.onClose(e);
             });
+            
             thisElement.appendChild(closeButton);
         }
 
-        thisElement.addEventListener("click", (e) => {
+        thisElement.setAttribute('eid', randomId(15));
+        EventLinker.addEvent(thisElement, "click", (e) => {
             this.onClick(e);
         });
+
 
         return thisElement;
     }

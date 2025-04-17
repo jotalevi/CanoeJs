@@ -2,6 +2,7 @@ import { Canoe, Router } from "canoejs";
 import HomePage from "./pages/homePage";
 import DocsPage from "./pages/docsPage";
 
+Canoe.debug = true; // Set to false to disable debug messages
 
 // This runs before every render cycle, here you should only add elements to the head of the document, the document itself and window.
 Canoe.preBuild(() => {
@@ -12,7 +13,7 @@ Canoe.preBuild(() => {
 // Here you can start adding elements to the page, it runs after every render cycle and here you should refer to any member of document or window
 Canoe.postBuild(() => {
   // This is how you can measure the time it takes to render the page
-  console.log("Execution time: " + (performance.now() - window['timeStart']) + "ms");
+  if (Canoe.debug) console.log("Execution time: " + (performance.now() - window['timeStart']) + "ms");
 })
 
 // Register the routes

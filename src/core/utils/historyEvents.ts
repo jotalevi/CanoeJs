@@ -1,4 +1,4 @@
-import { Canoe } from "../../canoe";
+import { Canoe, Router } from "../../canoe";
 
 export default function addHistoryEventsListener (): void {
     (function (history) {
@@ -25,4 +25,14 @@ export default function addHistoryEventsListener (): void {
     window.addEventListener('locationchange', () => {
         Canoe.setState({ url: window.location.pathname });
     });
+
+    window.onpopstate = () => {
+        if (Canoe.debug) console.log("popstate event triggered");
+        const widget = Router.render({ url: location.pathname });
+        const root = document.getElementById("app");
+        if (root && widget) {
+            const html = widget.render();
+            root.replaceChildren(html);
+        }
+    };
 }

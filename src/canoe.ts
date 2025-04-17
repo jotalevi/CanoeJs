@@ -1,3 +1,4 @@
+import EventLinker from "./core/EventLinker";
 import Render from "./core/Render";
 import Router from "./core/Router";
 import Widget from "./core/Widget";
@@ -10,6 +11,9 @@ import Col from "./core/widgets/Col";
 import Container from "./core/widgets/Container";
 import GroupedButtons from "./core/widgets/GroupedButtons";
 import H from "./core/widgets/H";
+import Input from "./core/widgets/Input";
+import InputGroup from "./core/widgets/InputGroup";
+import InputLabel from "./core/widgets/InputLabel";
 import Link from "./core/widgets/Link";
 import P from "./core/widgets/P";
 import Progress from "./core/widgets/Progress";
@@ -22,11 +26,14 @@ import FlexJustify from "./core/enum/FlexJustify";
 import FlexWrap from "./core/enum/FlexWrap";
 import DefaultStyles from "./core/enum/DefaultStyles";
 
-import randomId from "./core/utils/randomId";
-import addHistoryEventsListener from "./core/utils/historyEvents";
 import hashString from "./core/utils/hashStr";
+import addHistoryEventsListener from "./core/utils/historyEvents";
+import normalizeUrl from "./core/utils/normalizeUrl";
+import randomId from "./core/utils/randomId";
 
 class Canoe {
+  public static debug: boolean = false;
+
   private static rootId = "";
   private static stateHash: string = "";
   private static state: any;
@@ -129,6 +136,7 @@ class Canoe {
 
 export {
   Canoe,
+  EventLinker,
   Render,
   Router,
   Widget,
@@ -140,6 +148,9 @@ export {
   Container,
   GroupedButtons,
   H,
+  Input,
+  InputGroup,
+  InputLabel,
   Link,
   P,
   Progress,
@@ -150,7 +161,8 @@ export {
   FlexJustify,
   FlexWrap,
   DefaultStyles,
-  randomId,
+  hashString,
   addHistoryEventsListener,
-  hashString
+  normalizeUrl,
+  randomId,
 }
