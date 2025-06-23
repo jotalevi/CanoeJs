@@ -1,6 +1,6 @@
 {
   "name": "canoejs",
-  "version": "0.3.9+b15-villarica",
+  "version": "0.5.1+b1-melipeuco",
   "description": "A lightweight, widget-based UI framework",
   "main": "src/canoe.ts",
   "bin": {
@@ -12,9 +12,9 @@
     "tsc": "^2.0.4"
   },
   "devDependencies": {
-    "@types/node": "^22.13.10",
+    "@types/node": "^22.15.32",
     "esbuild": "^0.25.1",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.3"
   },
   "keywords": [
     "frontend",
@@ -27,5 +27,8 @@
     "url": "https://github.com/jotalevi/CanoeJs.git"
   },
   "author": "E.J. Talevi",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "build:cli": "npx tsc cli.ts --outDir . --target es2020 --module commonjs --esModuleInterop --skipLibCheck"
+  }
 }
