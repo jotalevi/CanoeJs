@@ -4,6 +4,7 @@ import Widget from "./Widget";
 interface Route {
     component: () => Widget;
     title: string;
+    params?: string[];
 }
 
 interface RouterState {
@@ -12,56 +13,79 @@ interface RouterState {
 }
 
 export default class Router {
-    private static routes: Record<string, Route> = {};
+    private static routes = new Map<string, Route>();
+    private static routeCache = new Map<string, Route>();
+    private static paramRoutes: Array<{pattern: string, route: Route, params: string[]}> = [];
 
     public static addRoute(path: string, component: () => Widget, title: string | null = null): void {
-        Router.routes[path] = {
+        const params: string[] = [];
+        const pattern = path.replace(/:(\w+)/g, (_, param) => {
+            params.push(param);
+            return '([^/]+)';
+        });
+        
+        const route: Route = {
             component,
             title: title ?? path,
+            params
         };
+        
+        if (params.length > 0) {
+            // Ruta con parámetros
+            this.paramRoutes.push({pattern, route, params});
+        } else {
+            // Ruta exacta
+            this.routes.set(path, route);
+        }
+        
         if (Canoe.debug) console.log("Route added:", path);
     }
 
     public static render(state: RouterState): Widget {
         const { url } = state;
-        const exactRoute = Router.routes[url];
-
+        
+        // Cache check para rutas exactas
+        const exactRoute = this.routes.get(url);
         if (exactRoute) {
             Canoe.setTitle(exactRoute.title);
             return exactRoute.component();
         }
+        
+        // Cache check para rutas con parámetros
+        const cachedRoute = this.routeCache.get(url);
+        if (cachedRoute) {
+            Canoe.setTitle(cachedRoute.title);
+            return cachedRoute.component();
+        }
 
-        const requestedParts = url.split("/");
-
-        for (const [routePath, route] of Object.entries(Router.routes)) {
-            const routeParts = routePath.split("/");
-            if (routeParts.length !== requestedParts.length) continue;
-
-            const params: Record<string, string> = {};
-            let isMatch = true;
-
-            for (let i = 0; i < routeParts.length; i++) {
-                if (routeParts[i].startsWith(":")) {
-                    params[routeParts[i].substring(1)] = requestedParts[i];
-                } else if (routeParts[i] !== requestedParts[i]) {
-                    isMatch = false;
-                    break;
-                }
-            }
-
-            if (isMatch) {
+        // Buscar en rutas con parámetros
+        for (const {pattern, route, params} of this.paramRoutes) {
+            const regex = new RegExp(`^${pattern}$`);
+            const match = url.match(regex);
+            
+            if (match) {
+                const paramValues: Record<string, string> = {};
+                params.forEach((param, index) => {
+                    paramValues[param] = match[index + 1];
+                });
+                
+                // Actualizar estado con parámetros
                 Canoe.setState({
                     ...Canoe.getState(),
-                    ...params,
+                    ...paramValues,
                 });
+                
                 Canoe.setTitle(route.title);
+                
+                // Cache la ruta para futuras consultas
+                this.routeCache.set(url, route);
+                
                 return route.component();
             }
         }
 
         Canoe.setTitle("Page not found");
         return this.notFoundComponent();
-
     }
 
     public static navigate(url: string): void {
@@ -79,4 +103,7 @@ export default class Router {
         this.notFoundComponent = component;
     }
 
+    public static clearCache(): void {
+        this.routeCache.clear();
+    }
 }

@@ -8,7 +8,6 @@
   },
   "dependencies": {
     "child_process": "^1.0.2",
-    "crypto-js": "^4.2.0",
     "esbuild": "^0.25.1",
     "tsc": "^2.0.4"
   },

@@ -14,11 +14,13 @@ import H from "./core/widgets/H";
 import Input from "./core/widgets/Input";
 import InputGroup from "./core/widgets/InputGroup";
 import InputLabel from "./core/widgets/InputLabel";
+import LazyWidget from "./core/widgets/LazyWidget";
 import Link from "./core/widgets/Link";
 import P from "./core/widgets/P";
 import Progress from "./core/widgets/Progress";
 import Row from "./core/widgets/Row";
 import Spinner from "./core/widgets/Spinner";
+import VirtualList from "./core/widgets/VirtualList";
 
 import FlexAlignContent from "./core/enum/FlexAlignContent";
 import FlexAlignItems from "./core/enum/FlexAlignItems";
@@ -30,15 +32,20 @@ import hashString from "./core/utils/hashStr";
 import addHistoryEventsListener from "./core/utils/historyEvents";
 import normalizeUrl from "./core/utils/normalizeUrl";
 import randomId from "./core/utils/randomId";
+import { memo, clearMemo, clearExpiredMemo } from "./core/utils/memo";
+import { PerformanceManager } from "./core/config/Performance";
 
 class Canoe {
   public static debug: boolean = false;
 
   private static rootId = "";
   private static stateHash: string = "";
-  private static state: any;
+  private static state: any = {};
   private static renderer: Render;
   private static render: (state: any) => Widget;
+  private static batchUpdates: boolean = false;
+  private static pendingUpdates: any[] = [];
+  private static renderScheduled: boolean = false;
 
   private static onLoadCallbacks: Function[] = [];
   private static postBuildCallbacks: Function[] = [];
@@ -71,7 +78,7 @@ class Canoe {
       callback();
     });
 
-    // Binc history events listeners
+    // Bind history events listeners
     addHistoryEventsListener();
 
     this.rootId = rootId;
@@ -83,7 +90,6 @@ class Canoe {
   }
 
   public static navigate(url: string): void {
-
     // if url is another site or has http, open in new tab
     if (url.includes("http") || url.includes("www")) {
       window.open(url, "_blank");
@@ -94,36 +100,65 @@ class Canoe {
   }
 
   public static setState(newState: any): void {
+    if (this.batchUpdates) {
+      this.pendingUpdates.push(newState);
+      this.scheduleRender();
+      return;
+    }
+    
     this._setState(newState, true);
   }
 
-  static _setState(newState: any, rebuild = true): Promise<void> {
-    //if there is no state, create one
-    if (!this.state) {
-      this.state = {};
+  public static batchUpdate(updates: (() => void)[]): void {
+    this.batchUpdates = true;
+    
+    updates.forEach(update => update());
+    
+    this.batchUpdates = false;
+    
+    if (this.pendingUpdates.length > 0) {
+      const mergedState = this.pendingUpdates.reduce((acc, update) => ({ ...acc, ...update }), {});
+      this.pendingUpdates = [];
+      this._setState(mergedState, true);
     }
+  }
 
+  private static scheduleRender(): void {
+    if (!this.renderScheduled) {
+      this.renderScheduled = true;
+      requestAnimationFrame(() => {
+        this.renderScheduled = false;
+        if (this.pendingUpdates.length > 0) {
+          const mergedState = this.pendingUpdates.reduce((acc, update) => ({ ...acc, ...update }), {});
+          this.pendingUpdates = [];
+          this._setState(mergedState, true);
+        }
+      });
+    }
+  }
+
+  static _setState(newState: any, rebuild = true): Promise<void> {
     this.preBuildCallbacks.forEach((callback) => {
       callback();
     });
 
-    //update the state
+    // Update the state
     Object.assign(this.state, newState);
 
-    //generate hash of state
+    // Generate hash of state (optimized)
     let newHash = hashString(JSON.stringify(this.state, (_, value) =>
       typeof value === "function" ? value.toString() : value
     ));
 
-    //if the hash is the same, do nothing
+    // If the hash is the same, do nothing
     if (newHash === this.stateHash) {
-      return;
+      return Promise.resolve();
     }
 
-    //update the hash
+    // Update the hash
     this.stateHash = newHash;
 
-    //re-render the app
+    // Re-render the app
     if (rebuild) {
       new Render(this.rootId, this.render(this.state)).render();
     }
@@ -131,6 +166,13 @@ class Canoe {
     this.postBuildCallbacks.forEach((callback) => {
       callback();
     });
+
+    return Promise.resolve();
+  }
+
+  static clearCache(): void {
+    Render.clearCache();
+    Router.clearCache();
   }
 }
 
@@ -151,11 +193,13 @@ export {
   Input,
   InputGroup,
   InputLabel,
+  LazyWidget,
   Link,
   P,
   Progress,
   Row,
   Spinner,
+  VirtualList,
   FlexAlignContent,
   FlexAlignItems,
   FlexJustify,
@@ -165,4 +209,8 @@ export {
   addHistoryEventsListener,
   normalizeUrl,
   randomId,
+  memo,
+  clearMemo,
+  clearExpiredMemo,
+  PerformanceManager,
 }

@@ -1,10 +1,12 @@
-import { EventLinker } from "canoejs";
+import EventLinker from "./EventLinker";
 import Widget from "./Widget";
 import { Canoe } from "../canoe";
 
 export default class Render {
   rootId: string = "";
   rootWidget: Widget;
+  private static renderCache = new Map<string, HTMLElement>();
+  private static lastWidgetHash: string = "";
 
   constructor(rootId: string = "", rootWidget: Widget) {
     this.rootId = rootId;
@@ -70,6 +72,47 @@ export default class Render {
     });
   };
 
+  private updateStyles = (oldEl: HTMLElement, newEl: HTMLElement) => {
+    const oldStyles = oldEl.style;
+    const newStyles = newEl.style;
+    
+    // Remove old styles
+    for (let i = oldStyles.length - 1; i >= 0; i--) {
+      const property = oldStyles[i];
+      if (!newStyles.getPropertyValue(property)) {
+        oldStyles.removeProperty(property);
+      }
+    }
+    
+    // Set new styles
+    for (let i = 0; i < newStyles.length; i++) {
+      const property = newStyles[i];
+      const value = newStyles.getPropertyValue(property);
+      if (oldStyles.getPropertyValue(property) !== value) {
+        oldStyles.setProperty(property, value);
+      }
+    }
+  };
+
+  private updateClasses = (oldEl: HTMLElement, newEl: HTMLElement) => {
+    const oldClasses = Array.from(oldEl.classList);
+    const newClasses = Array.from(newEl.classList);
+    
+    // Remove old classes
+    oldClasses.forEach(cls => {
+      if (!newClasses.includes(cls)) {
+        oldEl.classList.remove(cls);
+      }
+    });
+    
+    // Add new classes
+    newClasses.forEach(cls => {
+      if (!oldClasses.includes(cls)) {
+        oldEl.classList.add(cls);
+      }
+    });
+  };
+
   private updateChildren = (oldEl: HTMLElement, newEl: HTMLElement) => {
     const oldChildren = Array.from(oldEl.childNodes);
     const newChildren = Array.from(newEl.childNodes);
@@ -109,10 +152,30 @@ export default class Render {
     }
 
     this.updateAttributes(oldEl, newEl);
+    this.updateStyles(oldEl, newEl);
+    this.updateClasses(oldEl, newEl);
     this.updateChildren(oldEl, newEl);
   };
 
+  private getWidgetHash = (): string => {
+    // Crear un hash simple del widget basado en su estructura
+    const widgetStr = JSON.stringify(this.rootWidget, (key, value) => {
+      if (key === 'id') return undefined; // Ignorar IDs para el hash
+      return value;
+    });
+    return widgetStr;
+  };
+
   render(): HTMLElement | null {
+    const widgetHash = this.getWidgetHash();
+    
+    // Cache check - si el widget no ha cambiado, no re-renderizar
+    if (widgetHash === Render.lastWidgetHash) {
+      return document.getElementById(this.rootId);
+    }
+    
+    Render.lastWidgetHash = widgetHash;
+    
     EventLinker.clearEvents();
     const focusSelector = this.getFocus();
     const rootElement = document.getElementById(this.rootId);
@@ -123,7 +186,7 @@ export default class Render {
       return null;
     }
 
-    // Failsafe: replace everything on major route change
+    // Optimización: solo actualizar si hay cambios reales
     if (rootElement.firstChild) {
       this.updateElement(rootElement.firstChild as HTMLElement, newContent);
     } else {
@@ -136,4 +199,8 @@ export default class Render {
     return rootElement;
   }
 
+  static clearCache(): void {
+    Render.renderCache.clear();
+    Render.lastWidgetHash = "";
+  }
 }

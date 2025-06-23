@@ -1,6 +1,7 @@
 import DefaultStyles from "../enum/DefaultStyles";
 import randomId from "../utils/randomId";
 import Widget from "../Widget";
+import EventLinker from "../EventLinker";
 
 export default class Button implements Widget {
     id: string;
@@ -34,7 +35,7 @@ export default class Button implements Widget {
     }
 
     render(): HTMLElement {
-        let thisElement = document.createElement("div");
+        let thisElement = document.createElement("button");
 
         thisElement.id = this.id;
         thisElement.innerText = this.text;
@@ -48,7 +49,7 @@ export default class Button implements Widget {
         });
 
         Object.keys(this.callbacks).forEach((key) => {
-            thisElement.addEventListener(key, this.callbacks[key]);
+            EventLinker.addEvent(thisElement, key, this.callbacks[key]);
         });
 
         return thisElement;

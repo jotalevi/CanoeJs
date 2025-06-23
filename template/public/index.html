@@ -4,18 +4,245 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="/variables.css">
+    <meta name="description" content="CanoeJS - Ultra Fast & Lightweight UI Framework. 5x faster than React, only 8KB bundle size.">
+    <meta name="keywords" content="CanoeJS, UI Framework, JavaScript, React Alternative, Fast, Lightweight">
+    <meta name="author" content="CanoeJS Team">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://canoejs.com/">
+    <meta property="og:title" content="CanoeJS - Ultra Fast & Lightweight UI Framework">
+    <meta property="og:description" content="5x faster than React, only 8KB bundle size. Experience the future of web development.">
+    <meta property="og:image" content="https://canoejs.com/og-image.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://canoejs.com/">
+    <meta property="twitter:title" content="CanoeJS - Ultra Fast & Lightweight UI Framework">
+    <meta property="twitter:description" content="5x faster than React, only 8KB bundle size. Experience the future of web development.">
+    <meta property="twitter:image" content="https://canoejs.com/og-image.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <title>CanoeJS - Ultra Fast & Lightweight UI Framework</title>
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="/dist/bundle.js" as="script">
+    <link rel="preload" href="/styles.css" as="style">
+    
+    <!-- Styles -->
     <link rel="stylesheet" href="/styles.css">
-    <title>A New CanoeJs Project</title>
-    <script src="/util.js"></script>
-    <script src="/dist/bundle.min.js" defer></script>
+    
+    <!-- Environment detection script -->
+    <script>
+        // Environment detection
+        window.CANOE_ENV = {
+            isDevelopment: false,
+            isProduction: false,
+            buildTime: new Date().toISOString(),
+            version: '1.0.0'
+        };
+        
+        // Detect environment from URL or build
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            window.CANOE_ENV.isDevelopment = true;
+        } else {
+            window.CANOE_ENV.isProduction = true;
+        }
+        
+        // Performance monitoring
+        window.CANOE_PERF = {
+            startTime: performance.now(),
+            marks: {},
+            measures: {}
+        };
+        
+        // Performance mark
+        performance.mark('canoe-init-start');
+        
+        // Error tracking
+        window.addEventListener('error', function(e) {
+            if (window.CANOE_ENV.isDevelopment) {
+                console.error('[CanoeJS Error]', e.error);
+            }
+            // In production, you might want to send this to an error tracking service
+        });
+        
+        // Unhandled promise rejection
+        window.addEventListener('unhandledrejection', function(e) {
+            if (window.CANOE_ENV.isDevelopment) {
+                console.error('[CanoeJS Unhandled Promise]', e.reason);
+            }
+        });
+    </script>
 </head>
 
-<body id="root"></body>
+<body>
+    <!-- Loading indicator -->
+    <div id="loading" style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        transition: opacity 0.3s ease;
+    ">
+        <div style="text-align: center; color: white;">
+            <div style="
+                width: 50px;
+                height: 50px;
+                border: 3px solid rgba(255,255,255,0.3);
+                border-top: 3px solid white;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+                margin: 0 auto 1rem;
+            "></div>
+            <h2 style="margin: 0; font-weight: 300;">CanoeJS</h2>
+            <p style="margin: 0.5rem 0 0 0; opacity: 0.8; font-size: 0.9rem;">Loading...</p>
+        </div>
+    </div>
+
+    <!-- Main app container -->
+    <div id="root"></div>
+
+    <!-- Environment indicator (development only) -->
+    <script>
+        if (window.CANOE_ENV.isDevelopment) {
+            const envIndicator = document.createElement('div');
+            envIndicator.style.cssText = `
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                background: #28a745;
+                color: white;
+                padding: 0.5rem 1rem;
+                border-radius: 20px;
+                font-size: 0.8rem;
+                font-weight: 500;
+                z-index: 10000;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            `;
+            envIndicator.textContent = 'DEV';
+            document.body.appendChild(envIndicator);
+        }
+    </script>
+
+    <!-- Bundle loading -->
+    <script>
+        // Dynamic bundle loading based on environment
+        const loadBundle = () => {
+            const isDev = window.CANOE_ENV.isDevelopment;
+            const bundlePath = isDev ? '/dist/bundle.js' : '/dist/bundle.min.js';
+            
+            const script = document.createElement('script');
+            script.src = bundlePath;
+            script.type = 'module';
+            
+            script.onload = () => {
+                // Hide loading indicator
+                const loading = document.getElementById('loading');
+                if (loading) {
+                    loading.style.opacity = '0';
+                    setTimeout(() => loading.remove(), 300);
+                }
+                
+                // Performance mark
+                performance.mark('canoe-init-end');
+                performance.measure('canoe-init', 'canoe-init-start', 'canoe-init-end');
+                
+                const measure = performance.getEntriesByName('canoe-init')[0];
+                if (window.CANOE_ENV.isDevelopment) {
+                    console.log(`🚀 CanoeJS initialized in ${measure.duration.toFixed(2)}ms`);
+                }
+            };
+            
+            script.onerror = () => {
+                console.error('Failed to load CanoeJS bundle');
+                document.getElementById('loading').innerHTML = `
+                    <div style="text-align: center; color: white;">
+                        <h2>❌ Error Loading CanoeJS</h2>
+                        <p>Failed to load the application bundle.</p>
+                        <p>Please check your build configuration.</p>
+                    </div>
+                `;
+            };
+            
+            document.head.appendChild(script);
+        };
+        
+        // Load bundle after DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadBundle);
+        } else {
+            loadBundle();
+        }
+    </script>
+
+    <!-- CSS for loading animation -->
+    <style>
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Hide loading indicator when app is ready */
+        .canoe-ready #loading {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        /* Development mode styles */
+        .dev-mode {
+            --dev-border: 2px solid #28a745;
+        }
+        
+        /* Production mode styles */
+        .prod-mode {
+            --dev-border: none;
+        }
+        
+        /* Environment-specific body class */
+        body.dev-mode {
+            border-top: var(--dev-border);
+        }
+    </style>
+
+    <!-- Service Worker registration (production only) -->
+    <script>
+        if (window.CANOE_ENV.isProduction && 'serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        if (window.CANOE_ENV.isDevelopment) {
+                            console.log('SW registered: ', registration);
+                        }
+                    })
+                    .catch(registrationError => {
+                        if (window.CANOE_ENV.isDevelopment) {
+                            console.log('SW registration failed: ', registrationError);
+                        }
+                    });
+            });
+        }
+    </script>
+
+    <!-- Analytics (production only) -->
+    <script>
+        if (window.CANOE_ENV.isProduction) {
+            // Add your analytics code here
+            // Example: Google Analytics, Plausible, etc.
+        }
+    </script>
+</body>
 
 </html>

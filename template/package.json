@@ -3,16 +3,63 @@
   "description": "A new CanoeJs Project",
   "version": "1.0.0",
   "scripts": {
-    "bundle": "esbuild src/index.ts --bundle --minify --sourcemap=external --platform=node --target=node16 --legal-comments=none --outfile=public/dist/bundle.min.js",
+    "dev": "NODE_ENV=development concurrently \"npm run build:watch\" \"npm run serve:dev\"",
+    "build": "NODE_ENV=production npm run build:prod",
+    "build:dev": "NODE_ENV=development node build.config.js dev",
+    "build:prod": "NODE_ENV=production node build.config.js prod",
+    "build:watch": "NODE_ENV=development node build.config.js watch",
+    "bundle": "npm run bundle:prod",
+    "bundle:dev": "esbuild src/index.ts --bundle --sourcemap=inline --platform=browser --target=es2020 --outfile=public/dist/bundle.js --format=esm --watch --define:NODE_ENV=\\\"development\\\"",
+    "bundle:prod": "esbuild src/index.ts --bundle --minify --sourcemap=external --platform=browser --target=es2020 --legal-comments=none --outfile=public/dist/bundle.min.js --format=esm --define:NODE_ENV=\\\"production\\\"",
     "serve": "serve -s public -l 3000",
-    "dev": "nodemon --watch src --ext ts,js,json --verbose --exec \"npm run bundle && npm run serve\""
+    "serve:dev": "serve -s public -l 3000 --dev",
+    "preview": "npm run build && npm run serve",
+    "start": "npm run serve",
+    "clean": "rm -rf public/dist && rm -rf node_modules/.cache",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src/**/*.ts",
+    "format": "prettier --write src/**/*.ts",
+    "analyze": "npm run build:prod && npx bundle-analyzer public/dist/bundle.min.js",
+    "test": "echo \"No tests specified\" && exit 0",
+    "test:watch": "echo \"No tests specified\" && exit 0",
+    "deploy": "npm run build:prod && echo \"Build ready for deployment\"",
+    "deploy:dev": "npm run build:dev && echo \"Development build ready\"",
+    "info": "echo \"CanoeJS Project Info\" && echo \"Node: $(node --version)\" && echo \"NPM: $(npm --version)\" && echo \"Build Mode: $NODE_ENV\""
   },
   "dependencies": {
     "canoejs": "latest"
   },
   "devDependencies": {
-    "chokidar-cli": "^3.0.0",
     "concurrently": "^9.1.2",
-    "typescript": "^5.0.0"
+    "esbuild": "^0.25.1",
+    "typescript": "^5.0.0",
+    "serve": "^14.2.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ],
+  "canoe": {
+    "version": "1.0.0",
+    "buildModes": {
+      "development": {
+        "sourcemap": "inline",
+        "minify": false,
+        "watch": true,
+        "debug": true,
+        "logging": true
+      },
+      "production": {
+        "sourcemap": "external",
+        "minify": true,
+        "watch": false,
+        "debug": false,
+        "logging": false
+      }
+    }
   }
 }
