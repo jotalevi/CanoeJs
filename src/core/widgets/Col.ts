@@ -1,12 +1,10 @@
 import FlexAlignContent from "../enum/FlexAlignContent";
 import FlexAlignItems from "../enum/FlexAlignItems";
 import FlexJustify from "../enum/FlexJustify";
-import FlexWrap from "../enum/FlexWrap";
-import randomId from "../utils/randomId";
+import FlexWrap from "../enum/Flexwrap";
 import Widget from "../Widget";
 
-export default class Col implements Widget {
-    id: string;
+export default class Col extends Widget {
     classes: string[];
     css: {};
     children: Widget[];
@@ -22,10 +20,9 @@ export default class Col implements Widget {
             flexJustify: FlexJustify;
             flexWrap: FlexWrap;
             flexGap: string;
-        }>
+        }> = {}
     ) {
-        this.id = opts.id ?? randomId(5);
-
+        super(opts);
         this.classes = opts.classes ?? [];
         this.classes.push('col');
 
@@ -37,8 +34,6 @@ export default class Col implements Widget {
         this.css["gap"] = "0.5rem";
 
         this.children = opts.children ?? [];
-
-        return this;
     }
 
     render(): HTMLElement {

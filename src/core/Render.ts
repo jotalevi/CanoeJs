@@ -33,7 +33,9 @@ export default class Render {
       }
 
       if (el instanceof HTMLElement && el.id) {
-        stack.unshift(`${el.nodeName.toLowerCase()}#${el.id}`);
+        // Escape the ID for CSS selector
+        const escapedId = CSS.escape(el.id);
+        stack.unshift(`${el.nodeName.toLowerCase()}#${escapedId}`);
       } else if (sibCount > 1) {
         stack.unshift(`${el.nodeName.toLowerCase()}:nth-of-type(${sibIndex + 1})`);
       } else {

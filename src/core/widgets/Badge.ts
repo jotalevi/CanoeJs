@@ -1,9 +1,7 @@
-import DefaultStyles from "../enum/DefaultStyles";
-import randomId from "../utils/randomId";
+import DefaultStyles from "../enum/defaultStyles";
 import Widget from "../Widget";
 
-export default class Badge implements Widget {
-    id: string;
+export default class Badge extends Widget {
     classes: string[];
     css: {};
     callbacks: {};
@@ -18,19 +16,17 @@ export default class Badge implements Widget {
             css: {},
             callbacks: {},
             children: Widget[]
-        }>
+        }> = {}
     ) {
-        this.id = opts.id ?? randomId(5);
-
+        super(opts);
         this.classes = opts.classes ?? [];
         this.classes.push('badge');
-        this.classes.push('badge-' + (opts.style ?? DefaultStyles.PRIMARY).toString());
+        this.style = opts.style ?? DefaultStyles.PRIMARY;
+        this.classes.push('badge-' + this.style.toString());
 
         this.css = opts.css ?? {};
         this.callbacks = opts.callbacks ?? {};
         this.children = opts.children ?? [];
-
-        return this;
     }
 
     render(): HTMLElement {
@@ -42,8 +38,8 @@ export default class Badge implements Widget {
             thisElement.classList.add(className);
         });
 
-        Object.keys(this.style).forEach((key) => {
-            thisElement.style[key] = this.style[key];
+        Object.keys(this.css).forEach((key) => {
+            thisElement.style[key] = this.css[key];
         });
 
         Object.keys(this.callbacks).forEach((key) => {

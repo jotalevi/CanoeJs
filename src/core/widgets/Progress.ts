@@ -1,8 +1,7 @@
-import DefaultStyles from "../enum/DefaultStyles";
+import DefaultStyles from "../enum/defaultStyles";
 import Widget from "../Widget";
 
-export default class Progress implements Widget {
-    id: string;
+export default class Progress extends Widget {
     percentage: number;
     style: DefaultStyles;
 
@@ -11,13 +10,11 @@ export default class Progress implements Widget {
             id: string;
             percentage: number;
             style: DefaultStyles;
-        }>
+        }> = {}
     ) {
-        this.id = opts.id ?? "progress";
+        super(opts);
         this.percentage = opts.percentage ?? 0;
         this.style = opts.style ?? DefaultStyles.PRIMARY;
-
-        return this;
     }
 
     render(): HTMLElement {

@@ -1,9 +1,7 @@
-import randomId from "../utils/randomId";
 import Widget from "../Widget";
 import Button from "./Button";
 
-export default class GroupedButtons implements Widget {
-    id: string;
+export default class GroupedButtons extends Widget {
     classes: string[];
     css: {};
     buttons: Button[];
@@ -14,19 +12,17 @@ export default class GroupedButtons implements Widget {
             classes: string[];
             css: {};
             buttons: Button[];
-        }>
+        }> = {}
     ) {
+        super(opts);
         if (!opts.buttons || opts.buttons.length === 0)
             throw new Error('GroupedButtons should recieve at least one button.');
         this.buttons = opts.buttons;
 
-        this.id = opts.id ?? randomId(5);
         this.classes = opts.classes ?? [];
         this.classes.push('btn-group');
 
         this.css = opts.css ?? {};
-
-        return this;
     }
 
     render(): HTMLElement {

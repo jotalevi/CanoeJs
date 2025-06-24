@@ -1,10 +1,9 @@
-import DefaultStyles from "../enum/DefaultStyles";
+import DefaultStyles from "../enum/defaultStyles";
 import EventLinker from "../EventLinker";
 import randomId from "../utils/randomId";
 import Widget from "../Widget";
 
-export default class Alert implements Widget {
-    id: string;
+export default class Alert extends Widget {
     classes: string[];
     css: {};
     text: string;
@@ -23,10 +22,9 @@ export default class Alert implements Widget {
             isClosable: boolean,
             onClose: (e: any) => void,
             onClick: (e: any) => void,
-        }>
+        }> = {}
     ) {
-        this.id = opts.id ?? randomId(5);
-
+        super(opts);
         this.classes = opts.classes ?? [];
         this.classes.push('alert');
         this.classes.push('alert-' + (opts.style ?? DefaultStyles.PRIMARY).toString());
@@ -37,8 +35,6 @@ export default class Alert implements Widget {
 
         this.onClose = opts.onClose ?? ((e: any) => { });
         this.onClick = opts.onClick ?? ((e: any) => { });
-
-        return this;
     }
 
     render(): HTMLElement {
@@ -61,10 +57,11 @@ export default class Alert implements Widget {
             closeButton.setAttribute("data-bs-dismiss", "alert");
             closeButton.setAttribute("aria-label", "Close");
             closeButton.innerHTML = "×";
+            closeButton.style.cursor = "pointer";
 
             closeButton.setAttribute('eid', randomId(15));
             EventLinker.addEvent(closeButton, "click", (e) => {
-                fadeAlert(e)
+                // fadeAlert(e) // Function not defined
                 this.onClose(e);
             });
             
@@ -75,7 +72,6 @@ export default class Alert implements Widget {
         EventLinker.addEvent(thisElement, "click", (e) => {
             this.onClick(e);
         });
-
 
         return thisElement;
     }

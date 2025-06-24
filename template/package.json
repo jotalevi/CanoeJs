@@ -3,16 +3,16 @@
   "description": "A new CanoeJs Project",
   "version": "1.0.0",
   "scripts": {
-    "dev": "NODE_ENV=development concurrently \"npm run build:watch\" \"npm run serve:dev\"",
-    "build": "NODE_ENV=production npm run build:prod",
-    "build:dev": "NODE_ENV=development node build.config.js dev",
-    "build:prod": "NODE_ENV=production node build.config.js prod",
-    "build:watch": "NODE_ENV=development node build.config.js watch",
+    "dev": "set NODE_ENV=development && concurrently \"npm run build:watch\" \"npm run serve:dev\"",
+    "build": "set NODE_ENV=production && npm run build:prod",
+    "build:dev": "set NODE_ENV=development && node build.config.js dev",
+    "build:prod": "set NODE_ENV=production && node build.config.js prod",
+    "build:watch": "set NODE_ENV=development && node build.config.js watch",
     "bundle": "npm run bundle:prod",
     "bundle:dev": "esbuild src/index.ts --bundle --sourcemap=inline --platform=browser --target=es2020 --outfile=public/dist/bundle.js --format=esm --watch --define:NODE_ENV=\\\"development\\\"",
     "bundle:prod": "esbuild src/index.ts --bundle --minify --sourcemap=external --platform=browser --target=es2020 --legal-comments=none --outfile=public/dist/bundle.min.js --format=esm --define:NODE_ENV=\\\"production\\\"",
     "serve": "serve -s public -l 3000",
-    "serve:dev": "serve -s public -l 3000 --dev",
+    "serve:dev": "serve -s public -l 3000",
     "preview": "npm run build && npm run serve",
     "start": "npm run serve",
     "clean": "rm -rf public/dist && rm -rf node_modules/.cache",
@@ -24,7 +24,8 @@
     "test:watch": "echo \"No tests specified\" && exit 0",
     "deploy": "npm run build:prod && echo \"Build ready for deployment\"",
     "deploy:dev": "npm run build:dev && echo \"Development build ready\"",
-    "info": "echo \"CanoeJS Project Info\" && echo \"Node: $(node --version)\" && echo \"NPM: $(npm --version)\" && echo \"Build Mode: $NODE_ENV\""
+    "info": "echo \"CanoeJS Project Info\" && echo \"Node: $(node --version)\" && echo \"NPM: $(npm --version)\" && echo \"Build Mode: $NODE_ENV\"",
+    "dev:restart": "cd .. && npm link && cd template && npm link canoejs && npm run dev"
   },
   "dependencies": {
     "canoejs": "latest"

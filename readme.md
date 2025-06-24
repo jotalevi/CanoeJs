@@ -25,6 +25,143 @@ CanoeJS is an ultra-fast and lightweight UI framework for building dynamic web a
 
 ---
 
+## 🆕 New Features in v0.6.0
+
+### 🎣 React-Style Hooks
+```ts
+import { useState, useEffect, useMemo, useCallback, useRef } from "canoejs";
+
+// useState for local state management
+const [count, setCount] = useState(0);
+
+// useEffect for side effects
+useEffect(() => {
+  console.log(`Count changed to: ${count}`);
+}, [count]);
+
+// useMemo for expensive calculations
+const expensiveValue = useMemo(() => {
+  return count * 2 + 10;
+}, [count]);
+
+// useCallback for memoized functions
+const handleClick = useCallback(() => {
+  setCount(prev => prev + 1);
+}, []);
+```
+
+### 🎨 Advanced Component System
+```ts
+import { Component } from "canoejs";
+
+class MyComponent extends Component {
+  constructor() {
+    super({}, {
+      onMount: () => console.log('Component mounted!'),
+      onUnmount: () => console.log('Component unmounted!'),
+      onUpdate: (prevProps, newProps) => console.log('Props updated!'),
+      shouldUpdate: (prevProps, newProps) => prevProps.value !== newProps.value
+    });
+  }
+
+  render(): HTMLElement {
+    return new Button({ text: "Click me!" }).render();
+  }
+}
+```
+
+### 🌈 Dynamic Theme System
+```ts
+import { ThemeProvider, defaultTheme, darkTheme } from "canoejs";
+
+// Switch themes dynamically
+ThemeProvider.setTheme(darkTheme);
+ThemeProvider.toggleDarkMode();
+
+// Custom theme
+const customTheme = {
+  ...defaultTheme,
+  colors: {
+    ...defaultTheme.colors,
+    primary: '#ff6b6b',
+    secondary: '#4ecdc4'
+  }
+};
+ThemeProvider.setTheme(customTheme);
+```
+
+### 🎭 Animation System
+```ts
+import { AnimationManager } from "canoejs";
+
+// Basic animations
+await AnimationManager.fadeIn(element);
+await AnimationManager.bounce(element);
+await AnimationManager.shake(element);
+await AnimationManager.rotate(element, 360);
+
+// Custom animations
+await AnimationManager.animate(element, [
+  { transform: 'scale(0)', opacity: '0' },
+  { transform: 'scale(1)', opacity: '1' }
+], { duration: 500, easing: 'ease-out' });
+
+// Stagger animations
+await AnimationManager.stagger(elements, AnimationManager.fadeIn, 100);
+```
+
+### 🍞 Toast Notifications
+```ts
+import { ToastManager } from "canoejs";
+
+// Show different types of toasts
+ToastManager.success("Operation completed successfully!");
+ToastManager.error("Something went wrong!");
+ToastManager.warning("Please check your input");
+ToastManager.info("Here's some information");
+
+// Custom toast
+ToastManager.show({
+  title: "Custom Toast",
+  message: "This is a custom toast message",
+  type: "success",
+  duration: 3000,
+  position: "top-center"
+});
+```
+
+### 🪟 Modal System
+```ts
+import { Modal } from "canoejs";
+
+const modal = new Modal({
+  title: "Confirmation",
+  content: new P({ text: "Are you sure?" }),
+  size: 'md',
+  showCloseButton: true,
+  closeOnOverlayClick: true,
+  callbacks: {
+    onClose: () => console.log('Modal closed')
+  }
+});
+```
+
+### 💡 Tooltip System
+```ts
+import { Tooltip } from "canoejs";
+
+const tooltip = new Tooltip({
+  text: "This is a helpful tooltip",
+  position: 'top',
+  trigger: 'hover'
+});
+
+// Attach to element
+tooltip.attachTo(element);
+```
+
+---
+
 ## 🛠️ Getting Started
 
 ```sh
@@ -139,6 +276,9 @@ export default HomePage;
 ### High-Performance Widgets
 ```VirtualList``` ```LazyWidget```
 
+### Advanced Widgets (New!)
+```Modal``` ```Tooltip``` ```Toast```
+
 ### VirtualList - For Large Lists
 
 ```ts
@@ -200,181 +340,104 @@ Runs after every state update and allows full access to the **current** DOM.
 import { Canoe, PerformanceManager } from "canoejs";
 
 Canoe.onLoad(() => {
-  console.log("Loading Canoe...");
+  console.log("App loaded!");
 });
 
 Canoe.preBuild(() => {
-  PerformanceManager.measureTime("preBuild", () => {
-    window['timeStart'] = performance.now();
+  PerformanceManager.measureTime("build", () => {
+    // Build logic here
   });
 });
 
 Canoe.postBuild(() => {
-  PerformanceManager.measureTime("postBuild", () => {
-    if (Canoe.debug) {
-      const avgTime = PerformanceManager.getAverageTime("postBuild");
-      console.log(`Average render time: ${avgTime.toFixed(2)}ms`);
-    }
-  });
+  console.log("Build completed!");
+  console.log("Average build time:", PerformanceManager.getAverageTime("build"));
 });
 ```
 
 ---
 
-## 🎯 Optimized EventLinker
+## 🎨 CSS Custom Properties
 
-### Delegated Events for Better Performance
+CanoeJS automatically applies CSS custom properties for theming:
 
-```ts
-import { EventLinker } from "canoejs";
-
-// Direct events (for specific elements)
-EventLinker.addEvent(
-  "elementID",
-  "onclick",
-  (e) => console.log(e)
-);
-
-// Delegated events (for multiple elements)
-EventLinker.addDelegatedEvent(
-  ".btn",
-  "click",
-  (e) => console.log("Button clicked:", e.target)
-);
-
-// Static events
-EventLinker.addStaticEvent(
-  "customEvent",
-  (e) => console.log(e)
-);
-
-EventLinker.send("customEvent");
-```
-
----
-
-## ⚡ Advanced Optimizations
-
-### Batch Updates
-
-```ts
-import { Canoe } from "canoejs";
-
-// Update multiple states in a single operation
-Canoe.batchUpdate([
-  () => Canoe.setState({ user: newUser }),
-  () => Canoe.setState({ theme: newTheme }),
-  () => Canoe.setState({ language: newLanguage })
-]);
-```
-
-### Memoization
-
-```ts
-import { memo } from "canoejs";
-
-const expensiveCalculation = memo("calc", () => {
-  // Expensive calculation that gets cached
-  return heavyComputation();
-}, [dependency1, dependency2]);
-```
-
-### Performance Monitoring
-
-```ts
-import { PerformanceManager } from "canoejs";
-
-// Measure execution time
-const result = PerformanceManager.measureTime("operation", () => {
-  return expensiveOperation();
-});
-
-// Get metrics
-const avgTime = PerformanceManager.getAverageTime("operation");
-console.log(`Average time: ${avgTime}ms`);
-
-// Clear metrics
-PerformanceManager.clearMetrics();
-```
-
----
-
-## 🚀 Optimized Build System
-
-The new build system is significantly faster:
-
-```json
-{
-  "scripts": {
-    "bundle": "esbuild src/index.ts --bundle --minify --platform=browser --target=es2020 --format=esm",
-    "bundle:dev": "esbuild src/index.ts --bundle --sourcemap=inline --platform=browser --target=es2020 --format=esm --watch",
-    "dev": "concurrently \"npm run bundle:dev\" \"npm run serve\""
-  }
+```css
+:root {
+  --color-primary: #3b82f6;
+  --color-secondary: #6b7280;
+  --color-success: #10b981;
+  --color-danger: #ef4444;
+  --color-warning: #f59e0b;
+  --color-info: #06b6d4;
+  
+  --font-family: system-ui, -apple-system, sans-serif;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  
+  --radius-sm: 0.125rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
 }
 ```
 
-### Build System Benefits:
-- **10x faster compilation** than the previous system
-- **Instant hot reload** with esbuild watch
-- **Reduced bundle size** with aggressive minification
-- **ES2020 target** for better performance in modern browsers
-
 ---
 
-## 📊 Benchmarks
+## 🚀 Advanced Example
 
-### Initial Load Time
-- **CanoeJS**: ~50ms
-- **React**: ~150ms
-- **Vue**: ~120ms
-
-### Bundle Size
-- **CanoeJS**: ~8KB (minified + gzipped)
-- **React**: ~42KB (minified + gzipped)
-- **Vue**: ~33KB (minified + gzipped)
-
-### Re-rendering
-- **CanoeJS**: Only changed elements
-- **React**: Complete Virtual DOM
-- **Vue**: Complete Virtual DOM
-
----
-
-## 🎯 Why CanoeJS is Faster than React?
-
-1. **No Virtual DOM**: Direct rendering to real DOM
-2. **Optimized Hash Function**: 100x faster than SHA256
-3. **Event Delegation**: Fewer event listeners
-4. **Render Caching**: Avoids unnecessary re-renders
-5. **Batch Updates**: Batch state updates
-6. **Lazy Loading**: Deferred component loading
-7. **Virtual Scrolling**: For large lists
-8. **Memoization**: Intelligent caching
-9. **Optimized Router**: Route caching
-10. **Bundle Size**: 5x smaller than React
-
----
-
-## 🔧 Performance Configuration
+Check out the advanced example in `template/src/example-advanced.ts` to see all new features in action!
 
 ```ts
-import { PerformanceManager } from "canoejs";
+import AdvancedComponent from "./example-advanced";
 
-PerformanceManager.setConfig({
-    enableVirtualScrolling: true,
-    enableLazyLoading: true,
-    enableMemoization: true,
-    enableEventDelegation: true,
-    enableBatchUpdates: true,
-    enableRenderCaching: true,
-    maxCacheSize: 1000,
-    cacheTTL: 5 * 60 * 1000, // 5 minutes
-    debounceDelay: 16, // ~60fps
-    throttleDelay: 100
-});
+// Add to your routes
+Router.addRoute("/advanced", () => new AdvancedComponent(), "Advanced Demo");
 ```
 
 ---
 
-CanoeJS is now **5x faster** and **5x lighter** than React! 🚀
+## 📦 Bundle Size
+
+- **Core Framework**: ~8KB gzipped
+- **With All Features**: ~12KB gzipped
+- **Tree-shakeable**: Only import what you need
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+---
+
+## 📄 License
+
+MIT License - see [LICENSE](LICENSE) file for details.
+
+---
+
+## 🙏 Acknowledgments
+
+- Inspired by Flutter's widget system
+- Performance optimizations inspired by React and Vue
+- Animation system inspired by Framer Motion
+- Hooks system inspired by React Hooks
+
+---
+
+**Made with ❤️ by the CanoeJS Team**
 

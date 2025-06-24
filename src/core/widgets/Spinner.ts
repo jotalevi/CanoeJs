@@ -1,9 +1,8 @@
-import DefaultStyles from "../enum/DefaultStyles";
+import DefaultStyles from "../enum/defaultStyles";
 import SpinnerSize from "../enum/SpinnerSize";
 import Widget from "../Widget";
 
-export default class Spinner implements Widget {
-    id: string;
+export default class Spinner extends Widget {
     style: DefaultStyles;
     size: SpinnerSize;
 
@@ -12,13 +11,11 @@ export default class Spinner implements Widget {
             id: string;
             style: DefaultStyles;
             size: SpinnerSize;
-        }>
+        }> = {}
     ) {
-        this.id = opts.id ?? "spinner";
+        super(opts);
         this.style = opts.style ?? DefaultStyles.LIGHT;
         this.size = opts.size ?? SpinnerSize.SMALL;
-
-        return this;
     }
 
     render(): HTMLElement {

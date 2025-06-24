@@ -1,10 +1,8 @@
-import DefaultStyles from "../enum/DefaultStyles";
-import randomId from "../utils/randomId";
+import DefaultStyles from "../enum/defaultStyles";
 import Widget from "../Widget";
 import EventLinker from "../EventLinker";
 
-export default class Button implements Widget {
-    id: string;
+export default class Button extends Widget {
     classes: string[];
     css: {};
     callbacks: {};
@@ -19,19 +17,22 @@ export default class Button implements Widget {
             css: {},
             callbacks: {},
             text: string,
-        }>
+        }> = {}
     ) {
-        this.id = opts.id ?? randomId(5);
-
+        super(opts);
         this.classes = opts.classes ?? [];
         this.classes.push('btn');
-        this.classes.push('btn-' + (opts.style ?? DefaultStyles.PRIMARY).toString());
+        this.style = opts.style ?? DefaultStyles.PRIMARY;
+        this.classes.push('btn-' + this.style.toString());
 
         this.css = opts.css ?? {};
         this.callbacks = opts.callbacks ?? {};
         this.text = opts.text ?? 'Button';
-
-        return this;
+        
+        // Add default cursor pointer if not already set
+        if (!this.css['cursor']) {
+            this.css['cursor'] = 'pointer';
+        }
     }
 
     render(): HTMLElement {

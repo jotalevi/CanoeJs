@@ -1,3 +1,8 @@
+V0.5.2
+    - Fix: build and dev scripts now work on Windows (using 'set NODE_ENV')
+    - Fix: removed 'watch' and 'outdir' from esbuild config to prevent errors
+    - Fix: 'serve:dev' script no longer uses unsupported '--dev' option
+    - Fix: template now compiles correctly with local canoejs version
 V0.3.9
     - Added EventLinker
     - Added Input ImputLabel and InputGroup widgets

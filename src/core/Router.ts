@@ -2,7 +2,7 @@ import { Canoe, Col, H } from "../canoe";
 import Widget from "./Widget";
 
 interface Route {
-    component: () => Widget;
+    component: (state?: any) => Widget;
     title: string;
     params?: string[];
 }
@@ -17,7 +17,7 @@ export default class Router {
     private static routeCache = new Map<string, Route>();
     private static paramRoutes: Array<{pattern: string, route: Route, params: string[]}> = [];
 
-    public static addRoute(path: string, component: () => Widget, title: string | null = null): void {
+    public static addRoute(path: string, component: (state?: any) => Widget, title: string | null = null): void {
         const params: string[] = [];
         const pattern = path.replace(/:(\w+)/g, (_, param) => {
             params.push(param);
@@ -48,14 +48,14 @@ export default class Router {
         const exactRoute = this.routes.get(url);
         if (exactRoute) {
             Canoe.setTitle(exactRoute.title);
-            return exactRoute.component();
+            return exactRoute.component(state);
         }
         
         // Cache check para rutas con parámetros
         const cachedRoute = this.routeCache.get(url);
         if (cachedRoute) {
             Canoe.setTitle(cachedRoute.title);
-            return cachedRoute.component();
+            return cachedRoute.component(state);
         }
 
         // Buscar en rutas con parámetros
@@ -80,7 +80,7 @@ export default class Router {
                 // Cache la ruta para futuras consultas
                 this.routeCache.set(url, route);
                 
-                return route.component();
+                return route.component(state);
             }
         }
 

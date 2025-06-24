@@ -3,8 +3,7 @@ import EventLinker from "../EventLinker";
 import randomId from "../utils/randomId";
 import Widget from "../Widget";
 
-export default class Link implements Widget {
-    id: string;
+export default class Link extends Widget {
     text: string;
     to: string;
     css: {};
@@ -15,14 +14,17 @@ export default class Link implements Widget {
             to: string;
             text: string;
             css: {};
-        }>
+        }> = {}
     ) {
-        this.id = opts.id ?? randomId();
+        super(opts);
         this.to = opts.to ?? "/"; // Default to root
         this.text = opts.text ?? "";
         this.css = opts.css ?? {};
-
-        return this;
+        
+        // Add default cursor pointer if not already set
+        if (!this.css['cursor']) {
+            this.css['cursor'] = 'pointer';
+        }
     }
 
     render(): HTMLElement {

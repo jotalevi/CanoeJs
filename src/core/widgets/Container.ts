@@ -1,8 +1,6 @@
-import randomId from "../utils/randomId";
 import Widget from "../Widget";
 
-export default class Container implements Widget {
-    id: string;
+export default class Container extends Widget {
     classes: string[];
     css: {};
     children: Widget[];
@@ -13,17 +11,14 @@ export default class Container implements Widget {
             classes: string[];
             css: {};
             children: Widget[];
-        }>
+        }> = {}
     ) {
-        this.id = opts.id ?? randomId(5);
-
+        super(opts);
         this.classes = opts.classes ?? [];
         this.classes.push('container');
 
         this.css = opts.css ?? {};
         this.children = opts.children ?? [];
-
-        return this;
     }
 
     render(): HTMLElement {

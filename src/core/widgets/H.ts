@@ -1,8 +1,6 @@
-import randomId from "../utils/randomId";
 import Widget from "../Widget";
 
-export default class H implements Widget {
-    id: string;
+export default class H extends Widget {
     size: number | string;   
     text: string;
     css: {};
@@ -13,14 +11,12 @@ export default class H implements Widget {
             size: number | string;
             text: string;
             css: {};
-        }>
+        }> = {}
     ) {
-        this.id = opts.id ?? randomId();
+        super(opts);
         this.size = opts.size ?? 1;
         this.text = opts.text ?? "";
         this.css = opts.css ?? {};
-
-        return this;
     }
 
     render(): HTMLElement {

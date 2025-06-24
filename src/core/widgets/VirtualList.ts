@@ -11,8 +11,7 @@ interface VirtualListOptions {
     classes?: string[];
 }
 
-export default class VirtualList implements Widget {
-    id: string;
+export default class VirtualList extends Widget {
     items: any[];
     itemHeight: number;
     containerHeight: number;
@@ -23,7 +22,7 @@ export default class VirtualList implements Widget {
     private visibleEnd: number = 0;
 
     constructor(opts: VirtualListOptions) {
-        this.id = opts.id ?? randomId(5);
+        super(opts);
         this.items = opts.items;
         this.itemHeight = opts.itemHeight;
         this.containerHeight = opts.containerHeight;
@@ -33,7 +32,6 @@ export default class VirtualList implements Widget {
         this.classes.push('virtual-list');
 
         this.calculateVisibleRange();
-        return this;
     }
 
     private calculateVisibleRange(): void {

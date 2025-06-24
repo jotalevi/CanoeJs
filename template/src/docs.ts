@@ -1,274 +1,512 @@
-import { 
-  Canoe, 
-  Router, 
-  Col, 
-  Row, 
-  H, 
-  Button, 
-  Card,
-  Link,
+import {
+  Canoe,
+  Router,
+  Col,
+  Row,
+  H,
   P,
-  Badge,
-  Container,
+  Card,
+  Button,
+  Input,
   Alert,
-  CodeBlock
+  Badge,
+  Spinner,
+  Progress,
+  Container,
+  GroupedButtons,
+  Link,
+  VirtualList,
+  LazyWidget,
+  Modal,
+  Tooltip,
+  ToastManager,
+  ThemeProvider,
+  AnimationManager,
+  DefaultStyles,
+  Widget
 } from "canoejs";
 
-// Documentation page with full framework information
-const DocumentationPage = () => {
-  return new Col({
-    css: {
-      minHeight: "100vh",
-      background: "#f8f9fa",
-      padding: "2rem 1rem"
-    },
+// Widget para mostrar bloques de código
+class CodeBlock extends Widget {
+  private code: string;
+  private language: string;
+
+  constructor({ code, language = "javascript" }: { code: string; language?: string }) {
+    super();
+    this.code = code;
+    this.language = language;
+  }
+
+  render(): HTMLElement {
+    const element = document.createElement("pre");
+    element.style.cssText = `
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 1rem;
+      border-radius: 8px;
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 0.9rem;
+      overflow-x: auto;
+      margin: 1rem 0;
+    `;
+    element.textContent = this.code;
+    return element;
+  }
+}
+
+// Widget para demostrar animaciones
+class AnimationDemo extends Widget {
+  private root: HTMLElement | null = null;
+
+  private animateElement = (type: string) => {
+    const el = this.root?.querySelector("#anim-demo") as HTMLElement;
+    if (!el) return;
+    switch (type) {
+      case "fadeIn": AnimationManager.fadeIn(el); break;
+      case "bounce": AnimationManager.bounce(el); break;
+      case "shake": AnimationManager.shake(el); break;
+      case "rotate": AnimationManager.rotate(el, 360); break;
+      case "slideIn": AnimationManager.slideIn(el, "left"); break;
+      case "fadeOut": AnimationManager.fadeOut(el); break;
+      case "slideOut": AnimationManager.slideOut(el, "right"); break;
+    }
+  };
+
+  render(): HTMLElement {
+    const codeBlock = new CodeBlock({
+      code: `import { AnimationManager } from "canoejs";
+
+// Animar un elemento
+AnimationManager.fadeIn(element);
+AnimationManager.bounce(element);
+AnimationManager.shake(element);
+AnimationManager.rotate(element, 360);
+AnimationManager.slideIn(element, "left");`
+    });
+
+    const card = new Card({
+      css: { padding: "1.5rem", margin: "1rem 0" },
+      body: [
+        new H({ size: 3, text: "🎬 Animations", css: { marginBottom: "1rem" } }),
+        new P({ text: "CanoeJS incluye un sistema de animaciones listo para usar:" }),
+        codeBlock,
+        new Row({
+          css: { gap: "0.5rem", flexWrap: "wrap", marginTop: "1rem" },
+          children: [
+            new Button({ text: "Fade In", callbacks: { click: () => this.animateElement("fadeIn") } }),
+            new Button({ text: "Fade Out", callbacks: { click: () => this.animateElement("fadeOut") } }),
+            new Button({ text: "Bounce", callbacks: { click: () => this.animateElement("bounce") } }),
+            new Button({ text: "Shake", callbacks: { click: () => this.animateElement("shake") } }),
+            new Button({ text: "Rotate", callbacks: { click: () => this.animateElement("rotate") } }),
+            new Button({ text: "Slide In", callbacks: { click: () => this.animateElement("slideIn") } }),
+            new Button({ text: "Slide Out", callbacks: { click: () => this.animateElement("slideOut") } })
+          ]
+        }),
+        new Col({
+          id: "anim-demo",
+          css: { 
+            background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+            padding: "2rem",
+            borderRadius: "8px",
+            marginTop: "1rem",
+            textAlign: "center",
+            color: "white",
+            minHeight: "100px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center"
+          },
+          children: [new P({ 
+            text: "¡Anima este elemento!",
+            css: {
+              fontSize: "1.5rem",
+              fontWeight: "bold",
+              color: "white"
+            }
+           })]
+        })
+      ]
+    });
+    const el = card.render();
+    this.root = el;
+    return el;
+  }
+
+  private update = () => {
+    if (this.root) {
+      const nuevo = this.render();
+      (this.root as Element).replaceWith(nuevo as Element);
+      this.root = nuevo as HTMLElement;
+    }
+  };
+}
+
+// Widget para demostrar temas
+class ThemeDemo extends Widget {
+  private isDark: boolean = false;
+  private root: HTMLElement | null = null;
+
+  constructor() {
+    super();
+    this.isDark = ThemeProvider.getTheme().name === 'dark';
+  }
+
+  private toggleTheme = () => {
+    ThemeProvider.toggleDarkMode();
+    this.isDark = ThemeProvider.getTheme().name === 'dark';
+    this.update();
+  };
+
+  private update = () => {
+    if (this.root) {
+      const nuevo = this.render();
+      (this.root as Element).replaceWith(nuevo as Element);
+      this.root = nuevo as HTMLElement;
+    }
+  };
+
+  render(): HTMLElement {
+    const codeBlock = new CodeBlock({
+      code: `import { ThemeProvider } from "canoejs";
+
+// Cambiar tema
+ThemeProvider.toggleDarkMode();
+ThemeProvider.setTheme(customTheme);`
+    });
+
+    const card = new Card({
+      css: { padding: "1.5rem", margin: "1rem 0" },
+      body: [
+        new H({ size: 3, text: "🌙 Dark Mode", css: { marginBottom: "1rem" } }),
+        new P({ text: "Cambia entre tema claro y oscuro:" }),
+        codeBlock,
+        new Button({
+          text: this.isDark ? "☀️ Switch to Light" : "🌙 Switch to Dark",
+          callbacks: { click: this.toggleTheme },
+          style: this.isDark ? DefaultStyles.WARNING : DefaultStyles.INFO,
+          css: { marginTop: "1rem" }
+        }),
+        new P({
+          text: `Tema actual: ${this.isDark ? "Oscuro" : "Claro"}`,
+          css: {
+            marginTop: "1rem",
+            padding: "0.5rem",
+            background: this.isDark ? "#2d3748" : "#f7fafc",
+            color: this.isDark ? "#e2e8f0" : "#2d3748",
+            borderRadius: "4px",
+            fontSize: "0.9rem"
+          }
+        })
+      ]
+    });
+    const el = card.render();
+    this.root = el;
+    return el;
+  }
+}
+
+// Widget para demostrar modales
+class ModalDemo extends Widget {
+  private isOpen: boolean = false;
+  private root: HTMLElement | null = null;
+
+  private openModal = () => {
+    this.isOpen = true;
+    this.update();
+  };
+
+  private closeModal = () => {
+    this.isOpen = false;
+    this.update();
+  };
+
+  private update = () => {
+    if (this.root) {
+      const nuevo = this.render();
+      (this.root as Element).replaceWith(nuevo as Element);
+      this.root = nuevo as HTMLElement;
+    }
+  };
+
+  render(): HTMLElement {
+    const codeBlock = new CodeBlock({
+      code: `import { Modal } from "canoejs";
+
+const modal = new Modal({
+  title: "Mi Modal",
+  content: new P({ text: "Contenido del modal" }),
+  showCloseButton: true,
+  closeOnOverlayClick: true
+});`
+    });
+
+    const card = new Card({
+      css: { padding: "1.5rem", margin: "1rem 0" },
+      body: [
+        new H({ size: 3, text: "📋 Modals", css: { marginBottom: "1rem" } }),
+        new P({ text: "Crea diálogos modales fácilmente:" }),
+        codeBlock,
+        new Button({
+          text: "Abrir Modal",
+          callbacks: { click: this.openModal },
+          style: DefaultStyles.PRIMARY,
+          css: { marginTop: "1rem" }
+        }),
+        new Modal({
+          show: this.isOpen,
+          title: "🎉 ¡Modal Funcionando!",
+          content: new Col({
+            children: [
+              new P({ text: "Este es un modal interactivo creado con CanoeJS." }),
+              new P({ text: "Puedes cerrarlo haciendo click en el botón X o fuera del modal." }),
+              new Button({
+                text: "Cerrar",
+                callbacks: { click: this.closeModal },
+                style: DefaultStyles.SECONDARY,
+                css: { marginTop: "1rem" }
+              })
+            ]
+          }),
+          callbacks: { onClose: this.closeModal }
+        })
+      ]
+    });
+    const el = card.render();
+    this.root = el;
+    return el;
+  }
+}
+
+// Widget para demostrar tooltips
+class TooltipDemo extends Widget {
+  private visible: boolean = false;
+  private root: HTMLElement | null = null;
+
+  private showTooltip = () => { this.visible = true; this.update(); };
+  private hideTooltip = () => { this.visible = false; this.update(); };
+  private toggleTooltip = () => { this.visible = !this.visible; this.update(); };
+  private update = () => {
+    if (this.root) {
+      const nuevo = this.render();
+      (this.root as Element).replaceWith(nuevo as Element);
+      this.root = nuevo as HTMLElement;
+    }
+  };
+
+  render(): HTMLElement {
+    const codeBlock = new CodeBlock({
+      code: `import { Tooltip } from "canoejs";
+
+const tooltip = new Tooltip({
+  text: "Información útil",
+  position: "top",
+  trigger: "hover"
+});
+tooltip.attachTo(element);`
+    });
+
+    const card = new Card({
+      css: { padding: "1.5rem", margin: "1rem 0" },
+      body: [
+        new H({ size: 3, text: "💡 Tooltips", css: { marginBottom: "1rem" } }),
+        new P({ text: "Muestra información contextual:" }),
+        codeBlock,
+        new Row({
+          css: { gap: "1rem", marginTop: "1rem" },
+          children: [
+            new Button({
+              text: "Hover me",
+              callbacks: {
+                mouseenter: this.showTooltip,
+                mouseleave: this.hideTooltip
+              },
+              style: DefaultStyles.INFO
+            }),
+            new Button({
+              text: "Click me",
+              callbacks: {
+                click: this.toggleTooltip
+              },
+              style: DefaultStyles.SUCCESS
+            })
+          ]
+        }),
+        ...(this.visible ? [
+          new Tooltip({
+            text: "¡Este es un tooltip interactivo!",
+            position: "top",
+            trigger: "hover",
+            show: true,
+            target: document.body
+          })
+        ] : [])
+      ]
+    });
+    const el = card.render();
+    this.root = el;
+    return el;
+  }
+}
+
+// Widget para demostrar notificaciones
+class NotificationDemo extends Widget {
+  private root: HTMLElement | null = null;
+  private showToast = (type: "success" | "error" | "warning" | "info") => {
+    ToastManager.show({
+      message: `Notificación tipo ${type}`,
+      type
+    });
+  };
+
+  render(): HTMLElement {
+    const codeBlock = new CodeBlock({
+      code: `import { ToastManager } from "canoejs";
+
+ToastManager.success("¡Éxito!");
+ToastManager.error("Error!");
+ToastManager.warning("Advertencia!");
+ToastManager.info("Información!");`
+    });
+
+    const card = new Card({
+      css: { padding: "1.5rem", margin: "1rem 0" },
+      body: [
+        new H({ size: 3, text: "🔔 Notifications", css: { marginBottom: "1rem" } }),
+        new P({ text: "Muestra notificaciones toast:" }),
+        codeBlock,
+        new Row({
+          css: { gap: "0.5rem", flexWrap: "wrap", marginTop: "1rem" },
+          children: [
+            new Button({
+              text: "Success",
+              callbacks: { click: () => this.showToast("success") },
+              style: DefaultStyles.SUCCESS
+            }),
+            new Button({
+              text: "Error",
+              callbacks: { click: () => this.showToast("error") },
+              style: DefaultStyles.DANGER
+            }),
+            new Button({
+              text: "Warning",
+              callbacks: { click: () => this.showToast("warning") },
+              style: DefaultStyles.WARNING
+            }),
+            new Button({
+              text: "Info",
+              callbacks: { click: () => this.showToast("info") },
+              style: DefaultStyles.INFO
+            })
+          ]
+        })
+      ]
+    });
+    const el = card.render();
+    this.root = el;
+    return el;
+  }
+}
+
+// Widget para demostrar widgets
+class WidgetsDemo extends Widget {
+  private root: HTMLElement | null = null;
+
+  render(): HTMLElement {
+    const card = new Card({
+      css: { padding: "1.5rem", margin: "1rem 0" },
+      body: [
+        new H({ size: 3, text: "🧩 Widgets", css: { marginBottom: "1rem" } }),
+        new P({ text: "CanoeJS incluye una variedad de widgets optimizados:" }),
+        new Row({
+          css: { gap: "1rem", flexWrap: "wrap", marginTop: "1rem" },
+          children: [
+            new Button({ text: "Button" }),
+            new Badge({ children: [new P({ text: "Badge" })] }),
+            new Alert({ text: "Alert", style: DefaultStyles.INFO }),
+            new Spinner({}),
+            new Progress({ percentage: 75 }),
+            new Card({ body: [new P({ text: "Card" })] }),
+            new GroupedButtons({ 
+              buttons: [
+                new Button({ text: "A" }),
+                new Button({ text: "B" }),
+                new Button({ text: "C" })
+              ]
+            })
+          ]
+        }),
+        new H({ size: 4, text: "Virtual List", css: { marginTop: "2rem", marginBottom: "1rem" } }),
+        new VirtualList({
+          items: Array.from({ length: 100 }, (_, i) => ({ id: i, text: `Item ${i}` })),
+          itemHeight: 32,
+          containerHeight: 200,
+          renderItem: item => new P({ text: item.text })
+        })
+      ]
+    });
+    const el = card.render();
+    this.root = el;
+    return el;
+  }
+}
+
+// Widget wrapper para las demos
+class DemoWrapper extends Widget {
+  private demo: any;
+
+  constructor(demo: any) {
+    super();
+    this.demo = demo;
+  }
+
+  render(): HTMLElement {
+    return this.demo.render();
+  }
+}
+
+// Página principal de documentación
+export default function DocsPage() {
+  return new Container({
+    css: { maxWidth: "1200px", margin: "0 auto", padding: "2rem" },
     children: [
-      new Container({
-        css: { maxWidth: "1200px", margin: "0 auto" },
+      // Header
+      new Col({
+        css: { textAlign: "center", marginBottom: "3rem" },
         children: [
-          // Header
           new H({ 
             size: 1, 
             text: "📚 CanoeJS Documentation",
             css: { 
-              textAlign: "center", 
-              marginBottom: "2rem",
-              color: "#333"
+              fontSize: "3rem",
+              fontWeight: "bold",
+              background: "linear-gradient(45deg, #667eea 0%, #764ba2 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              marginBottom: "1rem"
             }
           }),
-          
-          // Navigation
+          new P({ 
+            text: "Guía completa de las características más importantes de CanoeJS",
+            css: { fontSize: "1.2rem", color: "#666", marginBottom: "2rem" }
+          }),
           new Row({
-            css: { gap: "1rem", flexWrap: "wrap", marginBottom: "2rem" },
+            css: { justifyContent: "center", gap: "1rem" },
             children: [
               new Link({
-                text: "← Back to Home",
+                text: "← Volver al Home",
                 to: "/",
                 css: {
                   display: "inline-block",
-                  padding: "0.5rem 1rem",
-                  background: "#007bff",
+                  padding: "0.75rem 1.5rem",
+                  background: "#667eea",
                   color: "white",
                   textDecoration: "none",
-                  borderRadius: "6px"
-                }
-              }),
-              new Link({
-                text: "🎯 Widgets",
-                to: "#widgets",
-                css: {
-                  display: "inline-block",
-                  padding: "0.5rem 1rem",
-                  background: "#28a745",
-                  color: "white",
-                  textDecoration: "none",
-                  borderRadius: "6px"
-                }
-              }),
-              new Link({
-                text: "⚡ Performance",
-                to: "#performance",
-                css: {
-                  display: "inline-block",
-                  padding: "0.5rem 1rem",
-                  background: "#ffc107",
-                  color: "#212529",
-                  textDecoration: "none",
-                  borderRadius: "6px"
-                }
-              })
-            ]
-          }),
-
-          // Getting Started
-          new Card({
-            css: {
-              padding: "2rem",
-              margin: "1rem 0",
-              borderRadius: "12px",
-              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-              background: "white"
-            },
-            children: [
-              new H({ 
-                size: 2, 
-                text: "🚀 Getting Started",
-                css: { marginBottom: "1rem", color: "#333" }
-              }),
-              new P({ 
-                text: "CanoeJS is an ultra-fast, lightweight UI framework that's 5x faster than React. Here's how to get started:",
-                css: { marginBottom: "1rem", color: "#666" }
-              }),
-              new Container({
-                css: {
-                  background: "#f8f9fa",
-                  padding: "1rem",
                   borderRadius: "8px",
-                  fontFamily: "monospace",
-                  fontSize: "0.9rem",
-                  border: "1px solid #e9ecef"
-                },
-                children: [
-                  new P({ text: "// Install globally", css: { margin: "0.5rem 0" } }),
-                  new P({ text: "npm install -g canoejs", css: { margin: "0.5rem 0", color: "#007bff" } }),
-                  new P({ text: "", css: { margin: "0.5rem 0" } }),
-                  new P({ text: "// Create new project", css: { margin: "0.5rem 0" } }),
-                  new P({ text: "canoejs new my-app", css: { margin: "0.5rem 0", color: "#007bff" } }),
-                  new P({ text: "", css: { margin: "0.5rem 0" } }),
-                  new P({ text: "// Navigate and run", css: { margin: "0.5rem 0" } }),
-                  new P({ text: "cd my-app && npm run dev", css: { margin: "0.5rem 0", color: "#007bff" } })
-                ]
-              })
-            ]
-          }),
-
-          // Basic Usage
-          new Card({
-            css: {
-              padding: "2rem",
-              margin: "1rem 0",
-              borderRadius: "12px",
-              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-              background: "white"
-            },
-            children: [
-              new H({ 
-                size: 2, 
-                text: "📝 Basic Usage",
-                css: { marginBottom: "1rem", color: "#333" }
-              }),
-              new P({ 
-                text: "Here's a simple example of how to create a CanoeJS application:",
-                css: { marginBottom: "1rem", color: "#666" }
-              }),
-              new Container({
-                css: {
-                  background: "#f8f9fa",
-                  padding: "1rem",
-                  borderRadius: "8px",
-                  fontFamily: "monospace",
-                  fontSize: "0.9rem",
-                  border: "1px solid #e9ecef"
-                },
-                children: [
-                  new P({ text: "import { Canoe, Router, Col, H, Button } from 'canoejs';", css: { margin: "0.5rem 0" } }),
-                  new P({ text: "", css: { margin: "0.5rem 0" } }),
-                  new P({ text: "const HomePage = () => {", css: { margin: "0.5rem 0" } }),
-                  new P({ text: "  return new Col({", css: { margin: "0.5rem 0" } }),
-                  new P({ text: "    children: [", css: { margin: "0.5rem 0" } }),
-                  new P({ text: "      new H({ size: 1, text: 'Hello CanoeJS!' }),", css: { margin: "0.5rem 0" } }),
-                  new P({ text: "      new Button({ text: 'Click me!' })", css: { margin: "0.5rem 0" } }),
-                  new P({ text: "    ]", css: { margin: "0.5rem 0" } }),
-                  new P({ text: "  });", css: { margin: "0.5rem 0" } }),
-                  new P({ text: "};", css: { margin: "0.5rem 0" } }),
-                  new P({ text: "", css: { margin: "0.5rem 0" } }),
-                  new P({ text: "Router.addRoute('/', HomePage);", css: { margin: "0.5rem 0" } }),
-                  new P({ text: "Canoe.buildApp('root', {}, Router.render).render();", css: { margin: "0.5rem 0" } })
-                ]
-              })
-            ]
-          }),
-
-          // Widgets Section
-          new Card({
-            css: {
-              padding: "2rem",
-              margin: "1rem 0",
-              borderRadius: "12px",
-              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-              background: "white"
-            },
-            children: [
-              new H({ 
-                size: 2, 
-                text: "🎯 Built-in Widgets",
-                css: { marginBottom: "1rem", color: "#333" }
-              }),
-              new P({ 
-                text: "CanoeJS comes with a comprehensive set of built-in widgets:",
-                css: { marginBottom: "1rem", color: "#666" }
-              }),
-              new Row({
-                css: { gap: "1rem", flexWrap: "wrap" },
-                children: [
-                  new Badge({ text: "Alert", style: "primary" }),
-                  new Badge({ text: "Badge", style: "secondary" }),
-                  new Badge({ text: "Button", style: "success" }),
-                  new Badge({ text: "Card", style: "danger" }),
-                  new Badge({ text: "Col", style: "warning" }),
-                  new Badge({ text: "Container", style: "info" }),
-                  new Badge({ text: "H", style: "light" }),
-                  new Badge({ text: "Input", style: "dark" }),
-                  new Badge({ text: "Link", style: "primary" }),
-                  new Badge({ text: "P", style: "secondary" }),
-                  new Badge({ text: "Row", style: "success" }),
-                  new Badge({ text: "Spinner", style: "danger" })
-                ]
-              })
-            ]
-          }),
-
-          // Performance Section
-          new Card({
-            css: {
-              padding: "2rem",
-              margin: "1rem 0",
-              borderRadius: "12px",
-              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-              background: "white"
-            },
-            children: [
-              new H({ 
-                size: 2, 
-                text: "⚡ Performance Features",
-                css: { marginBottom: "1rem", color: "#333" }
-              }),
-              new Row({
-                css: { gap: "1rem", flexWrap: "wrap" },
-                children: [
-                  new Col({
-                    css: { flex: "1 1 300px" },
-                    children: [
-                      new H({ size: 4, text: "🚀 Virtual Scrolling", css: { color: "#333" } }),
-                      new P({ text: "Handle large lists efficiently by only rendering visible items", css: { color: "#666" } })
-                    ]
-                  }),
-                  new Col({
-                    css: { flex: "1 1 300px" },
-                    children: [
-                      new H({ size: 4, text: "💾 Lazy Loading", css: { color: "#333" } }),
-                      new P({ text: "Defer loading of heavy components until needed", css: { color: "#666" } })
-                    ]
-                  }),
-                  new Col({
-                    css: { flex: "1 1 300px" },
-                    children: [
-                      new H({ size: 4, text: "🧠 Memoization", css: { color: "#333" } }),
-                      new P({ text: "Cache expensive calculations to avoid repeated work", css: { color: "#666" } })
-                    ]
-                  })
-                ]
-              })
-            ]
-          }),
-
-          // Footer
-          new Card({
-            css: {
-              padding: "2rem",
-              margin: "2rem 0 0 0",
-              borderRadius: "12px",
-              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-              background: "rgba(255,255,255,0.9)",
-              textAlign: "center"
-            },
-            children: [
-              new P({ 
-                text: "For more detailed documentation, visit our GitHub repository",
-                css: { color: "#666", marginBottom: "0.5rem" }
+                  fontWeight: "500"
+                }
               }),
               new Link({
-                text: "📖 Full Documentation on GitHub",
+                text: "🐙 Ver en GitHub",
                 to: "https://github.com/jotalevi/CanoeJs",
                 css: {
                   display: "inline-block",
@@ -276,16 +514,61 @@ const DocumentationPage = () => {
                   background: "#333",
                   color: "white",
                   textDecoration: "none",
-                  borderRadius: "6px",
+                  borderRadius: "8px",
                   fontWeight: "500"
                 }
               })
             ]
           })
         ]
+      }),
+
+      // Introducción
+      new Alert({
+        text: "¡Esta documentación es interactiva! Prueba todos los ejemplos en vivo.",
+        style: DefaultStyles.INFO,
+        css: { marginBottom: "2rem" }
+      }),
+
+      // Secciones de documentación
+      new DemoWrapper(new AnimationDemo()),
+      new DemoWrapper(new ThemeDemo()),
+      new DemoWrapper(new ModalDemo()),
+      new DemoWrapper(new TooltipDemo()),
+      new DemoWrapper(new NotificationDemo()),
+      new DemoWrapper(new WidgetsDemo()),
+
+      // Footer
+      new Card({
+        css: { 
+          padding: "2rem", 
+          marginTop: "3rem", 
+          textAlign: "center",
+          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+          color: "white"
+        },
+        body: [
+          new H({ size: 2, text: "🚀 ¿Listo para empezar?", css: { color: "white", marginBottom: "1rem" } }),
+          new P({ 
+            text: "CanoeJS te ofrece todo lo que necesitas para construir aplicaciones web modernas y rápidas.",
+            css: { color: "rgba(255,255,255,0.9)", marginBottom: "1.5rem" }
+          }),
+          new Link({
+            text: "Comenzar con CanoeJS",
+            to: "/",
+            css: {
+              display: "inline-block",
+              padding: "1rem 2rem",
+              background: "rgba(255,255,255,0.2)",
+              color: "white",
+              textDecoration: "none",
+              borderRadius: "8px",
+              fontWeight: "500",
+              border: "2px solid rgba(255,255,255,0.3)"
+            }
+          })
+        ]
       })
     ]
   });
-};
-
-export default DocumentationPage; 
+} 

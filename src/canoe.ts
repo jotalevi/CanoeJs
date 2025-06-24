@@ -21,12 +21,15 @@ import Progress from "./core/widgets/Progress";
 import Row from "./core/widgets/Row";
 import Spinner from "./core/widgets/Spinner";
 import VirtualList from "./core/widgets/VirtualList";
+import Modal from "./core/widgets/Modal";
+import Tooltip from "./core/widgets/Tooltip";
+import Toast, { ToastManager } from "./core/widgets/Toast";
 
 import FlexAlignContent from "./core/enum/FlexAlignContent";
 import FlexAlignItems from "./core/enum/FlexAlignItems";
 import FlexJustify from "./core/enum/FlexJustify";
-import FlexWrap from "./core/enum/FlexWrap";
-import DefaultStyles from "./core/enum/DefaultStyles";
+import FlexWrap from "./core/enum/Flexwrap";
+import DefaultStyles from "./core/enum/defaultStyles";
 
 import hashString from "./core/utils/hashStr";
 import addHistoryEventsListener from "./core/utils/historyEvents";
@@ -34,6 +37,25 @@ import normalizeUrl from "./core/utils/normalizeUrl";
 import randomId from "./core/utils/randomId";
 import { memo, clearMemo, clearExpiredMemo } from "./core/utils/memo";
 import { PerformanceManager } from "./core/config/Performance";
+
+// Hooks
+import { 
+  useState, 
+  useEffect, 
+  useMemo, 
+  useCallback, 
+  useRef,
+  setCurrentComponent,
+  getCurrentComponentId,
+  cleanupComponent,
+  resetHookIndex
+} from "./core/hooks";
+
+// Theme
+import { ThemeProvider, defaultTheme, darkTheme } from "./core/theme/ThemeProvider";
+
+// Animation
+import { AnimationManager } from "./core/animation/AnimationManager";
 
 class Canoe {
   public static debug: boolean = false;
@@ -50,6 +72,13 @@ class Canoe {
   private static onLoadCallbacks: Function[] = [];
   private static postBuildCallbacks: Function[] = [];
   private static preBuildCallbacks: Function[] = [];
+  
+  // Sistema de suscripción al estado
+  private static stateSubscribers: Map<string, Set<() => void>> = new Map();
+  
+  // Sistema de gestión de widgets
+  private static widgetInstances: Map<string, any> = new Map();
+  private static widgetUpdateQueue: Set<string> = new Set();
 
   static setTitle(title: string): void {
     if (title) {
@@ -59,6 +88,66 @@ class Canoe {
 
   static getState(): any {
     return this.state;
+  }
+
+  // Suscribirse a cambios de estado específicos
+  static subscribeToState(stateKey: string, callback: () => void): () => void {
+    if (!this.stateSubscribers.has(stateKey)) {
+      this.stateSubscribers.set(stateKey, new Set());
+    }
+    
+    this.stateSubscribers.get(stateKey)!.add(callback);
+    
+    // Retornar función para desuscribirse
+    return () => {
+      this.stateSubscribers.get(stateKey)?.delete(callback);
+    };
+  }
+
+  // Registrar una instancia de widget
+  static registerWidget(widgetId: string, widget: any): void {
+    this.widgetInstances.set(widgetId, widget);
+  }
+
+  // Desregistrar una instancia de widget
+  static unregisterWidget(widgetId: string): void {
+    this.widgetInstances.delete(widgetId);
+  }
+
+  // Marcar un widget para actualización
+  static markWidgetForUpdate(widgetId: string): void {
+    this.widgetUpdateQueue.add(widgetId);
+  }
+
+  // Actualizar todos los widgets marcados
+  private static updateMarkedWidgets(): void {
+    this.widgetUpdateQueue.forEach(widgetId => {
+      const widget = this.widgetInstances.get(widgetId);
+      if (widget && typeof widget.forceUpdate === 'function') {
+        try {
+          widget.forceUpdate();
+        } catch (error) {
+          console.error(`Error updating widget ${widgetId}:`, error);
+        }
+      }
+    });
+    this.widgetUpdateQueue.clear();
+  }
+
+  // Notificar a los suscriptores de cambios específicos
+  private static notifySubscribers(changedKeys: string[]): void {
+    changedKeys.forEach(key => {
+      const subscribers = this.stateSubscribers.get(key);
+      if (subscribers) {
+        subscribers.forEach(callback => {
+          try {
+            callback();
+          } catch (error) {
+            console.error('Error in state subscriber:', error);
+          }
+        });
+      }
+    });
   }
 
   static onLoad(callback: Function): void {
@@ -142,8 +231,24 @@ class Canoe {
       callback();
     });
 
+    // Detectar qué claves cambiaron
+    const changedKeys: string[] = [];
+    Object.keys(newState).forEach(key => {
+      if (JSON.stringify(this.state[key]) !== JSON.stringify(newState[key])) {
+        changedKeys.push(key);
+      }
+    });
+
     // Update the state
     Object.assign(this.state, newState);
+
+    // Notificar a los suscriptores de las claves que cambiaron
+    if (changedKeys.length > 0) {
+      this.notifySubscribers(changedKeys);
+    }
+
+    // Actualizar widgets marcados
+    this.updateMarkedWidgets();
 
     // Generate hash of state (optimized)
     let newHash = hashString(JSON.stringify(this.state, (_, value) =>
@@ -158,9 +263,11 @@ class Canoe {
     // Update the hash
     this.stateHash = newHash;
 
-    // Re-render the app
-    if (rebuild) {
-      new Render(this.rootId, this.render(this.state)).render();
+    // Re-render the app using existing renderer
+    if (rebuild && this.renderer) {
+      // Update the root widget with new state
+      this.renderer.rootWidget = this.render(this.state);
+      this.renderer.render();
     }
 
     this.postBuildCallbacks.forEach((callback) => {
@@ -173,6 +280,12 @@ class Canoe {
   static clearCache(): void {
     Render.clearCache();
     Router.clearCache();
+  }
+
+  static help() {
+    console.log("CanoeJS API disponible:");
+    console.log(Object.getOwnPropertyNames(Canoe).filter(k => typeof (Canoe as any)[k] === 'function'));
+    console.log("Ejemplo: Canoe.getState(), Canoe.setState({...}), Canoe.navigate('/docs'), etc.");
   }
 }
 
@@ -200,6 +313,10 @@ export {
   Row,
   Spinner,
   VirtualList,
+  Modal,
+  Tooltip,
+  Toast,
+  ToastManager,
   FlexAlignContent,
   FlexAlignItems,
   FlexJustify,
@@ -213,4 +330,20 @@ export {
   clearMemo,
   clearExpiredMemo,
   PerformanceManager,
-}
+  // Hooks
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  useRef,
+  setCurrentComponent,
+  getCurrentComponentId,
+  cleanupComponent,
+  resetHookIndex,
+  // Theme
+  ThemeProvider,
+  defaultTheme,
+  darkTheme,
+  // Animation
+  AnimationManager
+};

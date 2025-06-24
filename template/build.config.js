@@ -8,10 +8,8 @@ const buildConfig = {
   platform: 'browser',
   target: 'es2020',
   format: 'esm',
-  outdir: 'public/dist',
   sourcemap: true,
   minify: false,
-  watch: false,
   define: {
     'process.env.NODE_ENV': '"development"'
   },
@@ -38,7 +36,6 @@ const devConfig = {
   ...buildConfig,
   sourcemap: 'inline',
   minify: false,
-  watch: true,
   define: {
     'process.env.NODE_ENV': '"development"'
   },
@@ -51,11 +48,10 @@ const prodConfig = {
   ...buildConfig,
   sourcemap: 'external',
   minify: true,
-  watch: false,
   define: {
     'process.env.NODE_ENV': '"production"'
   },
-  outfile: 'public/dist/bundle.min.js',
+  outdir: 'public/dist',
   logLevel: 'warning',
   legalComments: 'none',
   treeShaking: true,
