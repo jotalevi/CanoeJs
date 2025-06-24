@@ -15,6 +15,8 @@ export default abstract class Widget {
   protected mounted: boolean = false;
   protected element: HTMLElement | null = null;
   private stateSubscriptions: (() => void)[] = [];
+  private root: HTMLElement | null = null;
+  private stateDependencies: Set<string> = new Set();
 
   constructor(props: any = {}, lifecycle: WidgetLifecycle = {}) {
     this.props = props;
@@ -24,6 +26,14 @@ export default abstract class Widget {
     // Registrar el widget en el sistema de gestión
     Canoe.registerWidget(this.id, this);
   }
+
+  protected update = () => {
+    if (this.root) {
+      const nuevo = this.renderWithDependencyTracking();
+      (this.root as Element).replaceWith(nuevo as Element);
+      this.root = nuevo as HTMLElement;
+    }
+  };
 
   protected generateId(): string {
     return `widget_${Math.random().toString(36).substr(2, 9)}`;
@@ -95,4 +105,56 @@ export default abstract class Widget {
   }
 
   abstract render(): HTMLElement;
+
+  // Método que combina render con tracking de dependencias
+  protected renderWithDependencyTracking(): HTMLElement {
+    // Limpiar dependencias anteriores
+    this.stateDependencies.clear();
+    
+    // Crear un proxy para detectar accesos al estado global
+    const originalGetState = Canoe.getState;
+    const accessedKeys: string[] = [];
+    
+    Canoe.getState = function() {
+      const state = originalGetState.call(this);
+      
+      // Crear un proxy para detectar qué propiedades se acceden
+      return new Proxy(state, {
+        get(target, prop) {
+          if (typeof prop === 'string') {
+            accessedKeys.push(prop);
+          }
+          return target[prop];
+        }
+      });
+    };
+    
+    // Llamar al método render original
+    const result = this.render();
+    
+    // Restaurar getState original
+    Canoe.getState = originalGetState;
+    
+    // Guardar las dependencias detectadas
+    accessedKeys.forEach(key => this.stateDependencies.add(key));
+    
+    // Suscribirse a las dependencias detectadas
+    this.subscribeToDetectedDependencies();
+    
+    return result;
+  }
+
+  // Obtener las dependencias detectadas
+  protected getStateDependencies(): string[] {
+    return Array.from(this.stateDependencies);
+  }
+
+  // Suscribirse automáticamente a las dependencias detectadas
+  protected subscribeToDetectedDependencies(): void {
+    this.stateDependencies.forEach(dependency => {
+      this.subscribeToGlobalState(dependency, () => {
+        this.update();
+      });
+    });
+  }
 }

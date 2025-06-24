@@ -56,6 +56,31 @@ Canoe.debug = true;
 Canoe.debugRender({ counter: 10 });
 ```
 
+### 🔄 Automatic Widget Updates
+```ts
+import { Widget, Button, Canoe } from "canoejs";
+
+// Widgets automatically update when their state dependencies change
+class CounterWidget extends Widget {
+  render(): HTMLElement {
+    // System automatically detects this widget uses 'counter' from global state
+    const currentCounter = Canoe.getState().counter || 0;
+    
+    return new Button({
+      text: `Counter: ${currentCounter}`,
+      callbacks: { 
+        click: () => {
+          Canoe.setState({ counter: currentCounter + 1 });
+        }
+      }
+    }).render();
+  }
+}
+
+// Widget automatically updates when 'counter' changes!
+const widget = new CounterWidget({});
+```
+
 ### 🎨 Advanced Component System
 ```ts
 import { Component } from "canoejs";
