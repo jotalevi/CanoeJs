@@ -1,3 +1,35 @@
+V0.6.0
+    - MAJOR: Removed React-style hooks system completely
+    - MAJOR: Simplified to global state management only (Canoe.getState() and Canoe.setState())
+    - FEATURE: Added automatic widget update system that detects state dependencies
+    - FEATURE: Widgets now automatically update when their state dependencies change
+    - FEATURE: Added Canoe.forceRender() method for forced re-renders
+    - FEATURE: Added Canoe.debugRender() method for debugging state changes
+    - FEATURE: Added robust state change detection with hasStateChanged() method
+    - IMPROVEMENT: Enhanced re-rendering system with better cache management
+    - IMPROVEMENT: Improved Render.ts cache system to be less aggressive
+    - IMPROVEMENT: Better performance with intelligent caching
+    - IMPROVEMENT: Enhanced state comparison for nested objects
+    - FIX: Fixed widgets not re-rendering when state changes
+    - FIX: Resolved hash-based optimization being too aggressive
+    - FIX: Fixed cache preventing necessary re-renders
+    - DOCS: Updated README with global state management examples
+    - DOCS: Added comprehensive documentation for automatic widget updates
+    - BREAKING: Removed useState, useEffect, useMemo, useCallback, useRef hooks
+    - BREAKING: Removed hooks directory and all related functionality
+
+V0.5.3
+    - FEATURE: Added automatic dependency tracking in Widget class
+    - FEATURE: Widgets can now automatically detect which state properties they use
+    - FEATURE: Added renderWithDependencyTracking() method
+    - FEATURE: Added getStateDependencies() method to check widget dependencies
+    - FEATURE: Added subscribeToDetectedDependencies() for automatic subscriptions
+    - IMPROVEMENT: Enhanced Widget class with state dependency management
+    - IMPROVEMENT: Better widget lifecycle management
+    - IMPROVEMENT: Automatic cleanup of state subscriptions
+    - DOCS: Added examples of automatic widget updates
+    - DOCS: Updated documentation with new widget features
+
 V0.5.2
     - Fix: build and dev scripts now work on Windows (using 'set NODE_ENV')
     - Fix: removed 'watch' and 'outdir' from esbuild config to prevent errors
