@@ -4,6 +4,7 @@ export default class EventLinker {
     private static events: { elementAtId: string, eventName: string, callback: EventListener }[] = [];
     private static sEvents : { eventName: string, callback: EventListener }[] = [];
     private static delegatedEvents: { selector: string, eventName: string, callback: EventListener }[] = [];
+    private static elementListenerMap: WeakMap<HTMLElement, Map<string, EventListener>> = new WeakMap();
     private static eventCache = new Map<string, EventListener>();
 
     static addEvent(
@@ -52,6 +53,7 @@ export default class EventLinker {
         EventLinker.events = [];
         EventLinker.delegatedEvents = [];
         EventLinker.eventCache.clear();
+        EventLinker.elementListenerMap = new WeakMap();
     }
 
     static linkEvents(): void {
@@ -59,12 +61,17 @@ export default class EventLinker {
         for (const event of EventLinker.events) {
             const element = document.getElementById(event.elementAtId) || document.querySelector(`[eid="${event.elementAtId}"]`);
             if (element) {
-                // Evitar agregar el mismo evento múltiples veces
-                const cacheKey = `${event.elementAtId}-${event.eventName}`;
-                if (!EventLinker.eventCache.has(cacheKey)) {
-                    element.addEventListener(event.eventName, event.callback);
-                    EventLinker.eventCache.set(cacheKey, event.callback);
+                let listenerMap = EventLinker.elementListenerMap.get(element);
+                if (!listenerMap) {
+                    listenerMap = new Map();
+                    EventLinker.elementListenerMap.set(element, listenerMap);
                 }
+                const prevListener = listenerMap.get(event.eventName);
+                if (prevListener) {
+                    element.removeEventListener(event.eventName, prevListener);
+                }
+                element.addEventListener(event.eventName, event.callback);
+                listenerMap.set(event.eventName, event.callback);
             } else {
                 if (Canoe.debug) console.warn(`Element with id ${event.elementAtId} not found for event ${event.eventName}`);
             }

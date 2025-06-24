@@ -56,7 +56,7 @@ class CodeBlock extends Widget {
 
 // Widget para demostrar animaciones
 class AnimationDemo extends Widget {
-  private root: HTMLElement | null = null;
+  
 
   private animateElement = (type: string) => {
     const el = this.root?.querySelector("#anim-demo") as HTMLElement;
@@ -127,52 +127,45 @@ AnimationManager.slideIn(element, "left");`
         })
       ]
     });
-    const el = card.render();
-    this.root = el;
-    return el;
+    return card.render();
   }
-
-  private update = () => {
-    if (this.root) {
-      const nuevo = this.render();
-      (this.root as Element).replaceWith(nuevo as Element);
-      this.root = nuevo as HTMLElement;
-    }
-  };
 }
 
 // Widget para demostrar temas
 class ThemeDemo extends Widget {
   private isDark: boolean = false;
-  private root: HTMLElement | null = null;
 
   constructor() {
     super();
-    this.isDark = ThemeProvider.getTheme().name === 'dark';
+    this.isDark = Canoe.getState().theme != undefined ? Canoe.getState().theme === 'dark' : false;
   }
 
   private toggleTheme = () => {
-    ThemeProvider.toggleDarkMode();
-    this.isDark = ThemeProvider.getTheme().name === 'dark';
-    this.update();
-  };
-
-  private update = () => {
-    if (this.root) {
-      const nuevo = this.render();
-      (this.root as Element).replaceWith(nuevo as Element);
-      this.root = nuevo as HTMLElement;
-    }
+    const currentTheme = Canoe.getState().theme || 'light';
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    Canoe.setState({ theme: newTheme });
+    
+    ToastManager.show({
+      message: `Tema cambiado a ${newTheme === "dark" ? "oscuro" : "claro"}`,
+      type: newTheme === "dark" ? "success" : "info",
+      duration: 3000
+    });
   };
 
   render(): HTMLElement {
+    // This will automatically detect that we're using 'theme' from global state
+    const currentTheme = Canoe.getState().theme || 'light';
+    this.isDark = currentTheme === 'dark';
+
+    console.log("Current theme:", this.isDark ? "Dark" : "Light");
+    console.log("Canoe state:", Canoe.getState());
+
     const codeBlock = new CodeBlock({
       code: `import { ThemeProvider } from "canoejs";
-
-// Cambiar tema
-ThemeProvider.toggleDarkMode();
-ThemeProvider.setTheme(customTheme);`
-    });
+            // Cambiar tema
+            ThemeProvider.toggleDarkMode();
+            ThemeProvider.setTheme(customTheme);`
+      });
 
     const card = new Card({
       css: { padding: "1.5rem", margin: "1rem 0" },
@@ -199,36 +192,24 @@ ThemeProvider.setTheme(customTheme);`
         })
       ]
     });
-    const el = card.render();
-    this.root = el;
-    return el;
+    return card.render();
   }
 }
 
 // Widget para demostrar modales
 class ModalDemo extends Widget {
-  private isOpen: boolean = false;
-  private root: HTMLElement | null = null;
-
   private openModal = () => {
-    this.isOpen = true;
-    this.update();
+    Canoe.setState({ modalOpen: true });
   };
 
   private closeModal = () => {
-    this.isOpen = false;
-    this.update();
-  };
-
-  private update = () => {
-    if (this.root) {
-      const nuevo = this.render();
-      (this.root as Element).replaceWith(nuevo as Element);
-      this.root = nuevo as HTMLElement;
-    }
+    Canoe.setState({ modalOpen: false });
   };
 
   render(): HTMLElement {
+    // This will automatically detect that we're using 'modalOpen' from global state
+    const isOpen = Canoe.getState().modalOpen || false;
+
     const codeBlock = new CodeBlock({
       code: `import { Modal } from "canoejs";
 
@@ -253,7 +234,7 @@ const modal = new Modal({
           css: { marginTop: "1rem" }
         }),
         new Modal({
-          show: this.isOpen,
+          show: isOpen,
           title: "🎉 ¡Modal Funcionando!",
           content: new Col({
             children: [
@@ -271,29 +252,29 @@ const modal = new Modal({
         })
       ]
     });
-    const el = card.render();
-    this.root = el;
-    return el;
+    return card.render();
   }
 }
 
 // Widget para demostrar tooltips
 class TooltipDemo extends Widget {
-  private visible: boolean = false;
-  private root: HTMLElement | null = null;
-
-  private showTooltip = () => { this.visible = true; this.update(); };
-  private hideTooltip = () => { this.visible = false; this.update(); };
-  private toggleTooltip = () => { this.visible = !this.visible; this.update(); };
-  private update = () => {
-    if (this.root) {
-      const nuevo = this.render();
-      (this.root as Element).replaceWith(nuevo as Element);
-      this.root = nuevo as HTMLElement;
-    }
+  private showTooltip = () => {
+    Canoe.setState({ tooltipVisible: true });
+  };
+  
+  private hideTooltip = () => {
+    Canoe.setState({ tooltipVisible: false });
+  };
+  
+  private toggleTooltip = () => {
+    const currentVisible = Canoe.getState().tooltipVisible || false;
+    Canoe.setState({ tooltipVisible: !currentVisible });
   };
 
   render(): HTMLElement {
+    // This will automatically detect that we're using 'tooltipVisible' from global state
+    const visible = Canoe.getState().tooltipVisible || false;
+
     const codeBlock = new CodeBlock({
       code: `import { Tooltip } from "canoejs";
 
@@ -331,7 +312,7 @@ tooltip.attachTo(element);`
             })
           ]
         }),
-        ...(this.visible ? [
+        ...(visible ? [
           new Tooltip({
             text: "¡Este es un tooltip interactivo!",
             position: "top",
@@ -342,15 +323,12 @@ tooltip.attachTo(element);`
         ] : [])
       ]
     });
-    const el = card.render();
-    this.root = el;
-    return el;
+    return card.render();
   }
 }
 
 // Widget para demostrar notificaciones
 class NotificationDemo extends Widget {
-  private root: HTMLElement | null = null;
   private showToast = (type: "success" | "error" | "warning" | "info") => {
     ToastManager.show({
       message: `Notificación tipo ${type}`,
@@ -401,16 +379,12 @@ ToastManager.info("Información!");`
         })
       ]
     });
-    const el = card.render();
-    this.root = el;
-    return el;
+    return card.render();
   }
 }
 
 // Widget para demostrar widgets
 class WidgetsDemo extends Widget {
-  private root: HTMLElement | null = null;
-
   render(): HTMLElement {
     const card = new Card({
       css: { padding: "1.5rem", margin: "1rem 0" },

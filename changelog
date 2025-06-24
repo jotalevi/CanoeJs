@@ -76,3 +76,10 @@ V0.2.7
     - Fixed missing 'to' field in Link widget
     - Fixed missing field assignations in several widgets
     - Updated Template project
+
+V0.6.2
+    - FIX: Prevented event handler duplication on widgets after multiple renders
+    - IMPROVEMENT: EventLinker now uses a WeakMap to track and clean up event listeners per element
+    - IMPROVEMENT: Before adding a new event listener, any previous listener of the same type is removed from the element
+    - IMPROVEMENT: No more exponential event firing when re-rendering widgets with event handlers
+    - TECHNICAL: Event system is now robust against DOM node replacement and repeated renders
