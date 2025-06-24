@@ -1,6 +1,6 @@
 {
   "name": "canoejs",
-  "version": "0.6.0+b1-puyai",
+  "version": "0.6.1+b1-puyai",
   "description": "A lightweight, widget-based UI framework",
   "main": "src/canoe.ts",
   "bin": {

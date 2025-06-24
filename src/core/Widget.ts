@@ -14,8 +14,8 @@ export default abstract class Widget {
   protected lifecycle: WidgetLifecycle;
   protected mounted: boolean = false;
   protected element: HTMLElement | null = null;
+  protected root: HTMLElement | null = null;
   private stateSubscriptions: (() => void)[] = [];
-  private root: HTMLElement | null = null;
   private stateDependencies: Set<string> = new Set();
 
   constructor(props: any = {}, lifecycle: WidgetLifecycle = {}) {
