@@ -309,6 +309,12 @@ const handleDemoClick = () => {
   const currentState = Canoe.getState();
   const newCounter = (currentState.demoCounter || 0) + 1;
   logger.debug('Demo button clicked, counter:', newCounter);
+  
+  // Usar debug si está habilitado
+  if (Canoe.debug) {
+    Canoe.debugRender({ demoCounter: newCounter });
+  }
+  
   Canoe.setState({ demoCounter: newCounter });
 };
 

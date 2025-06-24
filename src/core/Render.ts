@@ -171,7 +171,7 @@ export default class Render {
   render(): HTMLElement | null {
     const widgetHash = this.getWidgetHash();
     
-    // Cache check - si el widget no ha cambiado, no re-renderizar
+    // Cache check - solo evitar re-renderizado si el widget es exactamente el mismo
     if (widgetHash === Render.lastWidgetHash) {
       return document.getElementById(this.rootId);
     }

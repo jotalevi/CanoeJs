@@ -1,8 +1,20 @@
-import EventLinker from "./core/EventLinker";
+// Core
+import Widget from "./core/Widget";
 import Render from "./core/Render";
 import Router from "./core/Router";
-import Widget from "./core/Widget";
+import EventLinker from "./core/EventLinker";
 
+// Utils
+import hashString from "./core/utils/hashStr";
+import addHistoryEventsListener from "./core/utils/historyEvents";
+import normalizeUrl from "./core/utils/normalizeUrl";
+import randomId from "./core/utils/randomId";
+import { memo, clearMemo, clearExpiredMemo } from "./core/utils/memo";
+
+// Performance
+import { PerformanceManager } from "./core/config/Performance";
+
+// Widgets
 import Alert from "./core/widgets/Alert";
 import Badge from "./core/widgets/Badge";
 import Button from "./core/widgets/Button";
@@ -25,31 +37,12 @@ import Modal from "./core/widgets/Modal";
 import Tooltip from "./core/widgets/Tooltip";
 import Toast, { ToastManager } from "./core/widgets/Toast";
 
+// Enums
 import FlexAlignContent from "./core/enum/FlexAlignContent";
 import FlexAlignItems from "./core/enum/FlexAlignItems";
 import FlexJustify from "./core/enum/FlexJustify";
 import FlexWrap from "./core/enum/Flexwrap";
 import DefaultStyles from "./core/enum/defaultStyles";
-
-import hashString from "./core/utils/hashStr";
-import addHistoryEventsListener from "./core/utils/historyEvents";
-import normalizeUrl from "./core/utils/normalizeUrl";
-import randomId from "./core/utils/randomId";
-import { memo, clearMemo, clearExpiredMemo } from "./core/utils/memo";
-import { PerformanceManager } from "./core/config/Performance";
-
-// Hooks
-import { 
-  useState, 
-  useEffect, 
-  useMemo, 
-  useCallback, 
-  useRef,
-  setCurrentComponent,
-  getCurrentComponentId,
-  cleanupComponent,
-  resetHookIndex
-} from "./core/hooks";
 
 // Theme
 import { ThemeProvider, defaultTheme, darkTheme } from "./core/theme/ThemeProvider";
@@ -198,6 +191,42 @@ class Canoe {
     this._setState(newState, true);
   }
 
+  // Forzar re-renderizado incluso si el hash no cambió
+  public static forceRender(): void {
+    if (this.renderer) {
+      this.renderer.rootWidget = this.render(this.state);
+      this.renderer.render();
+    }
+  }
+
+  // Comparar valores de estado de manera más robusta
+  private static hasStateChanged(oldValue: any, newValue: any): boolean {
+    // Si son el mismo objeto, no han cambiado
+    if (oldValue === newValue) return false;
+    
+    // Si uno es null/undefined y el otro no, han cambiado
+    if ((oldValue == null) !== (newValue == null)) return true;
+    
+    // Si ambos son null/undefined, no han cambiado
+    if (oldValue == null && newValue == null) return false;
+    
+    // Si son de tipos diferentes, han cambiado
+    if (typeof oldValue !== typeof newValue) return true;
+    
+    // Para objetos y arrays, usar JSON.stringify para comparación profunda
+    if (typeof oldValue === 'object') {
+      try {
+        return JSON.stringify(oldValue) !== JSON.stringify(newValue);
+      } catch (error) {
+        // Si hay error en la serialización, asumir que cambiaron
+        return true;
+      }
+    }
+    
+    // Para valores primitivos, comparación directa
+    return oldValue !== newValue;
+  }
+
   public static batchUpdate(updates: (() => void)[]): void {
     this.batchUpdates = true;
     
@@ -234,7 +263,12 @@ class Canoe {
     // Detectar qué claves cambiaron
     const changedKeys: string[] = [];
     Object.keys(newState).forEach(key => {
-      if (JSON.stringify(this.state[key]) !== JSON.stringify(newState[key])) {
+      const oldValue = this.state[key];
+      const newValue = newState[key];
+      
+      // Comparación más robusta que maneja objetos anidados
+      const hasChanged = this.hasStateChanged(oldValue, newValue);
+      if (hasChanged) {
         changedKeys.push(key);
       }
     });
@@ -250,13 +284,18 @@ class Canoe {
     // Actualizar widgets marcados
     this.updateMarkedWidgets();
 
-    // Generate hash of state (optimized)
-    let newHash = hashString(JSON.stringify(this.state, (_, value) =>
-      typeof value === "function" ? value.toString() : value
-    ));
+    // Generate hash of state (optimized) - pero solo si hay cambios reales
+    let newHash = "";
+    if (changedKeys.length > 0) {
+      newHash = hashString(JSON.stringify(this.state, (_, value) =>
+        typeof value === "function" ? value.toString() : value
+      ));
+    } else {
+      newHash = this.stateHash; // Mantener el hash anterior si no hay cambios
+    }
 
-    // If the hash is the same, do nothing
-    if (newHash === this.stateHash) {
+    // Si no hay cambios reales, no hacer nada
+    if (newHash === this.stateHash && changedKeys.length === 0) {
       return Promise.resolve();
     }
 
@@ -286,6 +325,29 @@ class Canoe {
     console.log("CanoeJS API disponible:");
     console.log(Object.getOwnPropertyNames(Canoe).filter(k => typeof (Canoe as any)[k] === 'function'));
     console.log("Ejemplo: Canoe.getState(), Canoe.setState({...}), Canoe.navigate('/docs'), etc.");
+  }
+
+  // Método de debug para diagnosticar problemas de re-renderizado
+  static debugRender(newState: any): void {
+    console.log("🔍 Debug Render:");
+    console.log("Estado actual:", this.state);
+    console.log("Nuevo estado:", newState);
+    
+    const changedKeys: string[] = [];
+    Object.keys(newState).forEach(key => {
+      const oldValue = this.state[key];
+      const newValue = newState[key];
+      const hasChanged = this.hasStateChanged(oldValue, newValue);
+      if (hasChanged) {
+        changedKeys.push(key);
+        console.log(`  ✅ Cambio detectado en '${key}':`, { old: oldValue, new: newValue });
+      } else {
+        console.log(`  ❌ Sin cambios en '${key}':`, { old: oldValue, new: newValue });
+      }
+    });
+    
+    console.log("Claves que cambiaron:", changedKeys);
+    console.log("Hash actual:", this.stateHash);
   }
 }
 
@@ -330,16 +392,6 @@ export {
   clearMemo,
   clearExpiredMemo,
   PerformanceManager,
-  // Hooks
-  useState,
-  useEffect,
-  useMemo,
-  useCallback,
-  useRef,
-  setCurrentComponent,
-  getCurrentComponentId,
-  cleanupComponent,
-  resetHookIndex,
   // Theme
   ThemeProvider,
   defaultTheme,

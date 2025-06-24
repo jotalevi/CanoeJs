@@ -27,27 +27,33 @@ CanoeJS is an ultra-fast and lightweight UI framework for building dynamic web a
 
 ## 🆕 New Features in v0.6.0
 
-### 🎣 React-Style Hooks
+### 🌍 Global State Management
 ```ts
-import { useState, useEffect, useMemo, useCallback, useRef } from "canoejs";
+import { Canoe } from "canoejs";
 
-// useState for local state management
-const [count, setCount] = useState(0);
+// Get current state
+const currentState = Canoe.getState();
 
-// useEffect for side effects
-useEffect(() => {
-  console.log(`Count changed to: ${count}`);
-}, [count]);
+// Update state - triggers automatic re-render
+Canoe.setState({ 
+  counter: 5, 
+  user: { name: "John", age: 25 } 
+});
 
-// useMemo for expensive calculations
-const expensiveValue = useMemo(() => {
-  return count * 2 + 10;
-}, [count]);
+// Nested state updates
+Canoe.setState({ 
+  user: { 
+    ...currentState.user, 
+    age: 26 
+  } 
+});
 
-// useCallback for memoized functions
-const handleClick = useCallback(() => {
-  setCount(prev => prev + 1);
-}, []);
+// Force re-render when needed
+Canoe.forceRender();
+
+// Debug state changes
+Canoe.debug = true;
+Canoe.debugRender({ counter: 10 });
 ```
 
 ### 🎨 Advanced Component System
