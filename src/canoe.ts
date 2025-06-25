@@ -349,6 +349,34 @@ class Canoe {
     console.log("Claves que cambiaron:", changedKeys);
     console.log("Hash actual:", this.stateHash);
   }
+
+  // Método de debug para verificar el estado de los eventos
+  static debugEvents(): void {
+    console.log("🎯 Debug Eventos:");
+    const stats = EventLinker.getEventStats();
+    console.log("Estadísticas de eventos:", stats);
+    
+    const duplicateCheck = EventLinker.checkForDuplicates();
+    if (duplicateCheck.hasDuplicates) {
+      console.warn("⚠️ Eventos duplicados detectados:", duplicateCheck.duplicates);
+    } else {
+      console.log("✅ No se detectaron eventos duplicados");
+    }
+    
+    // Verificar si hay elementos con múltiples event listeners
+    const elementsWithEvents = new Map<string, number>();
+    EventLinker.events.forEach(event => {
+      const count = elementsWithEvents.get(event.elementAtId) || 0;
+      elementsWithEvents.set(event.elementAtId, count + 1);
+    });
+    
+    const elementsWithMultipleEvents = Array.from(elementsWithEvents.entries())
+      .filter(([_, count]) => count > 1);
+    
+    if (elementsWithMultipleEvents.length > 0) {
+      console.log("📊 Elementos con múltiples eventos:", elementsWithMultipleEvents);
+    }
+  }
 }
 
 export {

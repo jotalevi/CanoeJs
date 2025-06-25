@@ -1,3 +1,42 @@
+V0.6.5
+    - MAJOR: Complete EventLinker overhaul for guaranteed event cleanup and reconstruction
+    - MAJOR: Events are now completely flushed and rebuilt on every render to prevent duplicates
+    - FEATURE: Added EventLinker.clearEvents() with complete DOM event listener removal
+    - FEATURE: Added EventLinker.getEventStats() for debugging event statistics
+    - FEATURE: Added EventLinker.checkForDuplicates() to detect duplicate events
+    - FEATURE: Added Canoe.debugEvents() method for comprehensive event debugging
+    - IMPROVEMENT: Render.ts now replaces DOM content completely instead of incremental updates
+    - IMPROVEMENT: Enhanced EventLinker.linkEvents() with better duplicate detection
+    - IMPROVEMENT: Improved event delegation handling with proper cleanup
+    - IMPROVEMENT: Added comprehensive logging for event cleanup and reconstruction
+    - IMPROVEMENT: Template now includes "Debug Events" button for testing
+    - IMPROVEMENT: Auto-enable debug mode in development environment
+    - FIX: Eliminated possibility of event handler duplication across renders
+    - FIX: Prevented memory leaks from uncleaned event listeners
+    - FIX: Resolved accidental multiple event calls from residual listeners
+    - TECHNICAL: Complete DOM replacement ensures no event listener remnants
+    - TECHNICAL: WeakMap-based event tracking with proper cleanup
+    - TECHNICAL: Enhanced debugging capabilities for event system monitoring
+
+V0.6.4
+    - IMPROVEMENT: Enhanced Performance section in template with detailed metrics and interactive demos
+    - IMPROVEMENT: Added performance comparison table showing CanoeJS vs React vs Vue metrics
+    - IMPROVEMENT: Added interactive performance testing buttons for Virtual List, Memoization, and Event System
+    - IMPROVEMENT: Better visual design for performance section with cards and badges
+    - IMPROVEMENT: Added real-time performance metrics display
+    - DOCS: Updated template to showcase CanoeJS performance advantages
+    - TECHNICAL: Performance section now demonstrates actual framework capabilities
+
+V0.6.3
+    - Version bump
+    
+V0.6.2
+    - FIX: Prevented event handler duplication on widgets after multiple renders
+    - IMPROVEMENT: EventLinker now uses a WeakMap to track and clean up event listeners per element
+    - IMPROVEMENT: Before adding a new event listener, any previous listener of the same type is removed from the element
+    - IMPROVEMENT: No more exponential event firing when re-rendering widgets with event handlers
+    - TECHNICAL: Event system is now robust against DOM node replacement and repeated renders
+
 V0.6.1
     - IMPROVEMENT: Changed Widget.root from private to protected for better inheritance
     - IMPROVEMENT: Child widgets can now access root element for custom update logic
@@ -76,10 +115,3 @@ V0.2.7
     - Fixed missing 'to' field in Link widget
     - Fixed missing field assignations in several widgets
     - Updated Template project
-
-V0.6.2
-    - FIX: Prevented event handler duplication on widgets after multiple renders
-    - IMPROVEMENT: EventLinker now uses a WeakMap to track and clean up event listeners per element
-    - IMPROVEMENT: Before adding a new event listener, any previous listener of the same type is removed from the element
-    - IMPROVEMENT: No more exponential event firing when re-rendering widgets with event handlers
-    - TECHNICAL: Event system is now robust against DOM node replacement and repeated renders

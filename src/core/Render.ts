@@ -178,7 +178,9 @@ export default class Render {
     
     Render.lastWidgetHash = widgetHash;
     
+    // Limpiar TODOS los eventos antes de cualquier render
     EventLinker.clearEvents();
+    
     const focusSelector = this.getFocus();
     const rootElement = document.getElementById(this.rootId);
     const newContent = this.rootWidget.render();
@@ -188,16 +190,20 @@ export default class Render {
       return null;
     }
 
-    // Optimización: solo actualizar si hay cambios reales
-    if (rootElement.firstChild) {
-      this.updateElement(rootElement.firstChild as HTMLElement, newContent);
-    } else {
-      rootElement.appendChild(newContent);
-    }
+    // Reemplazar completamente el contenido para asegurar limpieza total de eventos
+    // Esto garantiza que no queden eventos residuales de renders anteriores
+    rootElement.innerHTML = '';
+    rootElement.appendChild(newContent);
 
     this.setFocus(focusSelector);
 
+    // Reconstruir todos los eventos después del render
     EventLinker.linkEvents();
+    
+    if (Canoe.debug) {
+      console.log('🔄 Render completado - Eventos limpiados y reconstruidos');
+    }
+    
     return rootElement;
   }
 
