@@ -74,7 +74,7 @@ export default abstract class Widget {
     
     // Si el widget está montado, actualizar inmediatamente
     if (this.mounted && this.element) {
-      const newElement = this.render();
+      const newElement = this.renderWithDependencyTracking();
       if (newElement && this.element.parentNode) {
         this.element.parentNode.replaceChild(newElement, this.element);
         this.element = newElement;
@@ -104,7 +104,13 @@ export default abstract class Widget {
     Canoe.unregisterWidget(this.id);
   }
 
-  abstract render(): HTMLElement;
+  // Método abstracto que debe ser implementado por los widgets
+  protected abstract renderInternal(): HTMLElement;
+
+  // Método render público que siempre usa tracking de dependencias
+  render(): HTMLElement {
+    return this.renderWithDependencyTracking();
+  }
 
   // Método que combina render con tracking de dependencias
   protected renderWithDependencyTracking(): HTMLElement {
@@ -130,7 +136,7 @@ export default abstract class Widget {
     };
     
     // Llamar al método render original
-    const result = this.render();
+    const result = this.renderInternal();
     
     // Restaurar getState original
     Canoe.getState = originalGetState;
